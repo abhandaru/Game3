@@ -1,31 +1,67 @@
-// @copyright 2013
-// @author Adu Bhandaru
-// Every game object derives from Class.
+/*
+ * Simple JavaScript Inheritance
+ * @author John Resig (http://ejohn.org/)
+ * MIT Licensed.
+ */
 
-G3.Class = function(attr) {
+// Inspired by base2 and Prototype
+(function(G3) {
+  var initializing = false;
+  var fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
 
-};
+  // The base Class implementation (does nothing)
+  G3.Class = function() { };
 
-// static methods
-G3.Class.extend = function(attr, super) {
-  super = super || G3.Class;
+  // Create a new Class that inherits from this class
+  G3.Class.extend = function(prop) {
+    var _super = this.prototype;
 
-  var Subclass = function(attr) {
-    super(attr);
+    // Instantiate a base class (but only create the instance,
+    // don't run the init constructor)
+    initializing = true;
+    var prototype = new this();
+    initializing = false;
+
+    // Copy the properties over onto the new prototype
+    for (var name in prop) {
+      // Check if we're overwriting an existing function
+      prototype[name] = typeof prop[name] == "function" &&
+        typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+        (function(name, fn){
+          return function() {
+            var tmp = this._super;
+
+            // Add a new ._super() method that is the same method
+            // but on the super-class
+            this._super = _super[name];
+
+            // The method only need to be bound temporarily, so we
+            // remove it when we're done executing
+            var ret = fn.apply(this, arguments);
+            this._super = tmp;
+
+            return ret;
+          };
+        })(name, prop[name]) :
+        prop[name];
+    }
+
+    // The dummy class constructor
+    function Class() {
+      // All construction is actually done in the init method
+      if ( !initializing && this.init )
+        this.init.apply(this, arguments);
+    }
+
+    // Populate our constructed prototype object
+    Class.prototype = prototype;
+
+    // Enforce the constructor to be what we expect
+    Class.prototype.constructor = Class;
+
+    // And make this class extendable
+    Class.extend = arguments.callee;
+
+    return Class;
   };
-
-  Subclass.extend = function(attr) {
-    return super.extend(attr, Subclass);
-  };
-
-  Subclass.prototype = new super();
-  return Subclass;
-};
-
-// instance methods
-G3.Class.prototype = {
-
-  init: function() { }
-  act: function() { console.log('Class'); }
-
-};
+})(G3);

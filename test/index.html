@@ -4,13 +4,17 @@
   <script type="text/javascript" src="../lib/three.js"></script>
   <!-- manual framework import -->
   <script type="text/javascript" src="../src/G3.js"></script>
+  <script type="text/javascript" src="../src/util/class.js"></script>
   <script type="text/javascript" src="../src/Game.js"></script>
   <!-- client code -->
   <script type="text/javascript" src="test.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
       var el = document.getElementById('game');
-      var game = new G3.Game({el: el});
+      var game = new Game(el);
+
+      console.log(game);
+      window.game = game;
     });
   </script>
 </head>
