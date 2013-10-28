@@ -1,5 +1,13 @@
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
 #game {
-  width: 400;
-  height: 400;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
   background: #DDD;
 }
