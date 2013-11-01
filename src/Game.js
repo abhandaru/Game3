@@ -28,8 +28,15 @@ G3.Game = G3.Class.extend({
     this.dynamic = [ ];
     this.static = [ ];
 
-    // start rendering
+    // delegate tasks
+    this.initEvents(el);
     G3.renderLoop(this, this.render);
+  },
+
+
+  initEvents: function(el) {
+    el.addEventListener('click', this.click);
+    el.addEventListener('mouseover', this.mouseover);
   },
 
 
