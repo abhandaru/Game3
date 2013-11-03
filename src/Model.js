@@ -11,9 +11,8 @@ G3.Model = G3.Class.extend({
   },
 
   setObject: function(object) {
-    if (object === undefined)
-      return object;
     this.object = object;
+    this.object.G3Model = this;
   },
 
   show: function(interactive) {
@@ -25,6 +24,10 @@ G3.Model = G3.Class.extend({
       this.game.addDynamic(this.object);
     else
       this.game.addStatic(this.object);
+  },
+
+  hide: function() {
+    // remove object from scene
   }
 
 });

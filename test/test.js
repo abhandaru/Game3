@@ -7,7 +7,7 @@ var Game = G3.Game.extend({
     var light = new G3.Light(this, 0xFFFFFF, new THREE.Vector3(200, 150, -200));
 
     // show objects
-    cube.show();
+    cube.show(true);
     light.show();
   }
 

@@ -7,6 +7,7 @@ G3.Game = G3.Class.extend({
   /**
    * Called when the object is constructed.
    * Logic that sets up the game. This means setting up the canvas (mostly).
+   * @param {HTMLElement} A container for your application.
    */
   init: function(el) {
     this.el = el;
@@ -21,22 +22,12 @@ G3.Game = G3.Class.extend({
     this.camera = G3.createCamera({ aspect: width/height });
     this.scene = G3.createScene(this.camera);
     this.renderer = G3.createRenderer(width, height);
-    this.el.appendChild(this.renderer.domElement);
-
-    // track objects in scene for this class
-    this.lights = [ ];
-    this.dynamic = [ ];
-    this.static = [ ];
+    this.canvas = this.renderer.domElement;
+    this.el.appendChild(this.canvas);
 
     // delegate tasks
-    this.initEvents(el);
+    this.events = new G3.Events(this);
     G3.renderLoop(this, this.render);
-  },
-
-
-  initEvents: function(el) {
-    el.addEventListener('click', this.click);
-    el.addEventListener('mouseover', this.mouseover);
   },
 
 
@@ -46,7 +37,6 @@ G3.Game = G3.Class.extend({
    * @param {THREE.Object} object The object to add to the scene.
    */
   addStatic: function(object) {
-    this.static.push(object);
     this.scene.add(object);
   },
 
@@ -57,7 +47,7 @@ G3.Game = G3.Class.extend({
    * @param {THREE.Object} object The object to add to the scene.
    */
   addDynamic: function(object) {
-    this.dynamic.push(object);
+    this.events.track(object);
     this.scene.add(object);
   },
 
@@ -67,7 +57,6 @@ G3.Game = G3.Class.extend({
    * @param {THREE.Light} light The light to add to the scene.
    */
   addLight: function(light) {
-    this.lights.push(light);
     this.scene.add(light);
   },
 

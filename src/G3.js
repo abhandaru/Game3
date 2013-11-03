@@ -62,10 +62,14 @@ G3.createCamera = function(options) {
   return camera;
 }
 
-// standard render loop
+/**
+ * Loop an animation function.
+ * @param {Object} caller The context to run the animate function in.
+ * @param {Function} renderFn Animation function.
+ */
 G3.renderLoop = function(caller, renderFn) {
   var render = function() {
-    requestAnimationFrame(render);
+    window.requestAnimationFrame(render);
     renderFn.apply(caller);
   };
   render();
