@@ -74,7 +74,9 @@ G3.Game = G3.Class.extend({
    * @return {void}
    */
   render: function() {
-    this.animate();
+    try {
+      this.animate();
+    } catch (e) { }
     this.renderer.render(this.scene, this.camera);
   }
 

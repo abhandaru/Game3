@@ -3,12 +3,17 @@ var Game = G3.Game.extend({
     this._super(el);
 
     // make a cube and a light
-    var cube = new Cube(this);
-    var light = new G3.Light(this, 0xFFFFFF, new THREE.Vector3(200, 150, -200));
+    this.cube = new Cube(this);
+    this.light = new G3.Light(this, 0xFFFFFF, new THREE.Vector3(200, 150, -200));
 
     // show objects
-    cube.show(true);
-    light.show();
+    this.cube.show(true);
+    this.light.show();
+  },
+
+  // gets called every timer fired
+  animate: function() {
+    this.cube.animate();
   }
 
 });
@@ -25,8 +30,14 @@ var Cube = G3.Model.extend({
     this.setObject(this.cube);
   },
 
+  animate: function() {
+    this.cube.rotation.x += 0.01;
+    this.cube.rotation.y += 0.02;
+  },
+
   mouseover: function(event) {
-    this.cube.material.color.setHex(0xFF0000);
+    var rand = Math.floor(Math.random() * 0xFFFFFF);
+    this.cube.material.color.setHex(rand);
   },
 
   mouseout: function(event) {
