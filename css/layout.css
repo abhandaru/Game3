@@ -1,0 +1,72 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  font-family: Arial, Helvetica, Sans-Serif;
+}
+
+.info {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 600px;
+  background: #EEE;
+}
+
+.info h1 {
+  padding: 20px;
+  margin: 0px;
+}
+
+.info h2 {
+  padding: 20px 20px 10px 20px;
+  margin: 0px;
+  font-size: 20px;
+  font: 200 24px/24px Helvetica Neue, Arial, sans-serif;
+}
+
+.info p {
+  padding: 0px 20px 20px 20px;
+  margin: 0px;
+  font-size: 13px;
+  color: #333;
+  line-height: 150%;
+}
+
+.info p.important {
+  font-size: 16px;
+}
+
+.info p a {
+  text-decoration: none;
+  color: #5BB000;
+}
+
+.info p a:hover {
+  color: #000;
+}
+
+.info pre code {
+  margin-bottom: 30px;
+  overflow: auto;
+  padding: 20px;
+  background: #DDD;
+  border-top: 1px solid #5BB000;
+  border-bottom: 1px solid #5BB000;
+  display: block;
+}
+
+.info p tt {
+  background: #DDD;
+  color: #000;
+  padding: 1px 6px;
+}
+
+.example {
+  position: absolute;
+  top: 0px;
+  left: 600px;
+  bottom: 0px;
+  right: 0px;
+  background: #FFF;
+}
+
