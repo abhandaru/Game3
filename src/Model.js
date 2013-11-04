@@ -10,9 +10,9 @@ G3.Model = G3.Class.extend({
     this.interactive = false;
   },
 
-  setObject: function(object) {
-    this.object = object;
-    this.object.G3Model = this;
+  setMesh: function(mesh) {
+    this.mesh = mesh;
+    this.mesh.G3Model = this;
   },
 
   show: function(interactive) {
@@ -21,13 +21,14 @@ G3.Model = G3.Class.extend({
     this.interactive = interactive;
     // render in the scene
     if (interactive)
-      this.game.addDynamic(this.object);
+      this.game.addDynamic(this.mesh);
     else
-      this.game.addStatic(this.object);
+      this.game.addStatic(this.mesh);
   },
 
   hide: function() {
     // remove object from scene
+    // unimplemented
   }
 
 });

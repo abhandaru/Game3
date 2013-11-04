@@ -126,7 +126,8 @@ G3.Events = G3.Class.extend({
     var focus = this.focus;
     if (focus && (!current || focus !== current)) {
       var event = new G3.Event({
-        point2D: this.lastMousePosition
+        point2D: this.lastMousePosition,
+        model: focus
       })
       this.sendEvent(focus, focus.mouseout, event);
     }
