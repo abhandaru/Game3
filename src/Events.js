@@ -47,12 +47,13 @@ G3.Events = G3.Class.extend({
   wrapper: function(handler) {
     var that = this;
     return function(event) {
-      that.lastMousePosition.set(event.pageX, event.pageY);
-
+      var x = event.layerX;
+      var y = event.layerY;
+      that.lastMousePosition.set(x, y);
       // see if we hit anything in the scene
       var ret = undefined;
       var model = null;
-      var targets = that.getTargets(event.clientX, event.clientY);
+      var targets = that.getTargets(x, y);
       if (targets.length) {
         var target = targets[0];
         var eventG3 = new G3.Event({
