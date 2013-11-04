@@ -61,7 +61,7 @@ body {
   padding: 1px 6px;
 }
 
-.example {
+#example {
   position: absolute;
   top: 0px;
   left: 600px;
