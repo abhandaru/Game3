@@ -14,6 +14,7 @@
 
   // Create a new Class that inherits from this class
   G3.Class.extend = function(prop) {
+    prop = (prop === undefined) ? {} : prop;
     var _super = this.prototype;
 
     // Instantiate a base class (but only create the instance,

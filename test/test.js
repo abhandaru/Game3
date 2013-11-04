@@ -19,9 +19,17 @@ var Cube = G3.Model.extend({
 
     // set up geometry
     var grey = new THREE.MeshLambertMaterial({color: 0xCCCCCC});
-    var cube = new THREE.Mesh(new THREE.CubeGeometry(100, 100, 100), grey);
+    this.cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), grey);
 
     // set object
-    this.setObject(cube);
+    this.setObject(this.cube);
+  },
+
+  mouseover: function(event) {
+    this.cube.material.color.setHex(0xFF0000);
+  },
+
+  mouseout: function(event) {
+    this.cube.material.color.setHex(0xCCCCCC);
   }
 });

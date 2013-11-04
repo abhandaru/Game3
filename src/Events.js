@@ -49,16 +49,26 @@ G3.Events = G3.Class.extend({
     return function(event) {
       that.lastMousePosition.set(event.pageX, event.pageY);
 
-      var focus = null;
-      var targets = that.getTargets(event.clientX, event.clientY);
-
-      // run the handler
+      // see if we hit anything in the scene
       var ret = undefined;
-      if (handler && typeof handler == "function") {
-        ret = handler.apply(that, event);
+      var model = null;
+      var targets = that.getTargets(event.clientX, event.clientY);
+      if (targets.length) {
+        var target = targets[0];
+        var eventG3 = new G3.Event({
+          distance: target.distance,
+          point2D: that.lastMousePosition,
+          point3D: target.point,
+          face: target.face,
+          mesh: target.object,
+          model: target.object.G3Model
+        });
+        model = eventG3.model;
+        ret = handler.apply(that, [eventG3]);
       }
 
       // clean up
+      that.checkFocus(model);
       event.preventDefault();
       return ret;
     };
@@ -79,19 +89,64 @@ G3.Events = G3.Class.extend({
     return intersects;
   },
 
-  click: function(event) { },
+
+  click: function(event) {
+    var handler = event.model.click;
+    this.sendEvent(event.model, handler, event);
+  },
 
 
   mousedown: function(event) {
     this.isMouseDown = true;
+    var handler = event.model.mousedown;
+    this.sendEvent(event.model, handler, event);
   },
 
 
   mouseup: function(event) {
     this.isMouseDown = false;
+    var handler = event.model.mouseup;
+    this.sendEvent(event.model, handler, event);
   },
 
 
-  mousemove: function(event) { }
+  mousemove: function(event) {
+    var target = event.model;
+    var handler = target.mousemove;
+    this.sendEvent(target, handler, event);
+    // check for change of focus (hover)
+    if (this.focus !== target) {
+      this.sendEvent(target, target.mouseover, event);
+    }
+  },
+
+
+  checkFocus: function(current) {
+    var focus = this.focus;
+    if (focus && (!current || focus !== current)) {
+      var event = new G3.Event({
+        point2D: this.lastMousePosition
+      })
+      this.sendEvent(focus, focus.mouseout, event);
+    }
+    // update the focus
+    this.focus = current;
+  },
+
+
+  /**
+   * If the model/view has a handler for this event, we will call it.
+   * These handler names will be published to the API.
+   * @param {G3.Model} model The model/view to send the event to.
+   * @param {Function(G3.Event)} handler The handler to call (if it exists).
+   * @param {G3.Event} event The event to send.
+   */
+  sendEvent: function(model, handler, event) {
+    if (model && handler && typeof handler == 'function') {
+      handler.apply(model, [event]);
+      return true;
+    }
+    return false;
+  }
 
 });

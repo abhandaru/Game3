@@ -64,10 +64,20 @@ G3.Game = G3.Class.extend({
   /**
    * Call any logic that would change your game state every timestep.
    * For example, animations may require you to update an object's position.
-   * @return void
+   * @return {void}
+   */
+  animate: function() { },
+
+
+  /**
+   * This gets called by the render loop.
+   * @return {void}
    */
   render: function() {
+    this.animate();
     this.renderer.render(this.scene, this.camera);
   }
+
+
 
 });
