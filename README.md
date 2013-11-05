@@ -62,7 +62,7 @@ Declaring models and specifying how they'll be rendered is easy. Just extend the
         this.cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), grey);
 
         // set object
-        this.setObject(this.cube);
+        this.setMesh(this.cube);
       },
 
       animate: function() {
