@@ -4,11 +4,18 @@ Game3 (G3) is a JavaScript framework to write 3D apps using <a href="http://thre
 
 The project is currently in it's infancy. The main problem with most ThreeJS apps is that there is a lot of exposed boilerplate code, and no consistent way to handle events with objects in the scene. Track this project on Github: <a href="https://github.com/abhandaru/Game3">Game3</a>
 
+## Dependencies
+
+You only need the following if you want to build (consolidate and minify) the library. You can edit, test, and contrubite without any of this.
+
+- <tt>make</tt> -- We use GNU make as a command line tool.
+- <tt>uglifyjs</tt> -- We use a global UglifyJS install.
+
 ## A Simple Example
 
 Here is a simple example using the Game3 framework. By extending the provided base classes, it is easy to customize and override without exposing too much.
 
-    var App = G3.App.extend({
+    var Game = G3.Game.extend({
       init: function(el) {
         this._super(el);
 
@@ -61,7 +68,8 @@ Binding event handlers is simple. If you have provided a handler, it will be cal
 
 All that's left is to create an instance of the <tt>App</tt>, and provide it a container to live in. The whole thing clocks in at about <b>50 lines</b> (including whitespace and comments)!
 
-    <script type="text/javascript">
       var el = document.getElementById('game');
       var game = new Game(el);
-    </script>
+
+You can find complete examples in the <tt>test</tt> folder. A minified version of the library can be found in the build folder.
+
