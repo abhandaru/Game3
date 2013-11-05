@@ -13,7 +13,8 @@ G3.Events = G3.Class.extend({
     // some state to track events
     this.isMouseDown = false;
     this.lastMousePosition = new THREE.Vector2(0, 0);
-    this.focus = null;
+    this.lastOver = null;
+    this.lastClick = null;
 
     // delegate tasks
     this.bind(game.canvas);
@@ -47,29 +48,34 @@ G3.Events = G3.Class.extend({
   wrapper: function(handler) {
     var that = this;
     return function(event) {
-      var x = event.layerX;
-      var y = event.layerY;
-      that.lastMousePosition.set(x, y);
+      var coords = new THREE.Vector2(event.layerX, event.layerY);
+      var eventG3 = new G3.Event({
+        delta2D:  coords.clone().sub(that.lastMousePosition),
+        point2D:  coords.clone()
+      });
+
       // see if we hit anything in the scene
-      var ret = undefined;
-      var model = null;
-      var targets = that.getTargets(x, y);
+      var targets = that.getTargets(coords.x, coords.y);
       if (targets.length) {
         var target = targets[0];
-        var eventG3 = new G3.Event({
+        // add the extra event data
+        eventG3.set({
           distance: target.distance,
-          point2D: that.lastMousePosition,
           point3D: target.point,
           face: target.face,
           mesh: target.object,
           model: target.object.G3Model
         });
-        model = eventG3.model;
-        ret = handler.apply(that, [eventG3]);
+      } else {
+        eventG3.set({ model: that.game });
       }
 
+      // run the handler
+      var ret = handler.apply(that, [eventG3]);
+
       // clean up
-      that.checkFocus(model);
+      that.checkFocus(eventG3.model, coords);
+      that.lastMousePosition.set(coords.x, coords.y);
       event.preventDefault();
       return ret;
     };
@@ -92,12 +98,14 @@ G3.Events = G3.Class.extend({
 
 
   click: function(event) {
+    this.lastClick = event.model;
     var handler = event.model.click;
     this.sendEvent(event.model, handler, event);
   },
 
 
   mousedown: function(event) {
+    this.lastClick = event.model;
     this.isMouseDown = true;
     var handler = event.model.mousedown;
     this.sendEvent(event.model, handler, event);
@@ -116,23 +124,27 @@ G3.Events = G3.Class.extend({
     var handler = target.mousemove;
     this.sendEvent(target, handler, event);
     // check for change of focus (hover)
-    if (this.focus !== target) {
+    if (this.lastOver !== target) {
       this.sendEvent(target, target.mouseover, event);
+    }
+    // check for drags
+    if (this.isMouseDown && this.lastClick === target) {
+      this.sendEvent(target, target.mousedrag, event);
     }
   },
 
 
-  checkFocus: function(current) {
-    var focus = this.focus;
+  checkFocus: function(current, coords) {
+    var focus = this.lastOver;
     if (focus && (!current || focus !== current)) {
       var event = new G3.Event({
-        point2D: this.lastMousePosition,
+        point2D: coords.clone(),
         model: focus
       })
       this.sendEvent(focus, focus.mouseout, event);
     }
     // update the focus
-    this.focus = current;
+    this.lastOver = current;
   },
 
 
