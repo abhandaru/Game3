@@ -29,7 +29,5 @@ var Cube = G3.Model.extend({
     var dy = event.delta2D.y;
     this.cube.position.x += 2*dx;
     this.cube.position.z += 2*dy;
-  },
-
-  mousedrop: function(event) { }
+  }
 });
