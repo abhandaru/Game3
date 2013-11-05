@@ -6,10 +6,21 @@ The project is currently in it's infancy. The main problem with most ThreeJS app
 
 ## Dependencies
 
-You only need the following if you want to build (consolidate and minify) the library. You can edit, test, and contrubite without any of this.
+You only need the following if you want to build (consolidate and minify) the library. You can edit, test, and contribute without any of this.
 
-- <tt>make</tt> -- We use GNU make as a command line tool.
-- <tt>uglifyjs</tt> -- We use a global UglifyJS install.
+- <tt>make</tt> - We use GNU make as a command line tool.
+- <tt>uglifyjs</tt> - We use a global UglifyJS install.
+
+
+## Features
+The project is young! We are a little feature light, but worth using and always growing.
+
+- <tt>G3.Class</tt> - Standard inheritance model.
+- <tt>G3.Game</tt> - Camera, rendered, and animation are all set up for you.
+- <tt>G3.Model</tt> - Bind handlers easily, add state to your scene objects.
+- <tt>G3.Event</tt> - Directly sent to you model/view, with rich metadata.
+- <tt>this._super</tt> - Easy override and extension.
+- Growing fast.
 
 ## Simple Example
 
@@ -51,7 +62,7 @@ Declaring models and specifying how they'll be rendered is easy. Simply extend t
       animate: function() {
         this.cube.rotation.x += 0.01;
         this.cube.rotation.y += 0.02;
-      },</code></pre>
+      },
 
 Binding event handlers is simple. If you have provided a handler, it will be called transparently. All the projection math is done for you. In an MVC-like pattern, you can operate on the highest level app class from here.
 
@@ -68,8 +79,9 @@ Binding event handlers is simple. If you have provided a handler, it will be cal
 
 All that's left is to create an instance of the <tt>App</tt>, and provide it a container to live in. The whole thing clocks in at about <b>50 lines</b> (including whitespace and comments)!
 
-      var el = document.getElementById('game');
-      var game = new Game(el);
+    // You will want to run these in a DOMReady handler.
+    var el = document.getElementById('game');
+    var game = new Game(el);
 
 You can find complete examples in the <tt>test</tt> folder. A minified version of the library can be found in the build folder.
 
