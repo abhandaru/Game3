@@ -16,15 +16,21 @@ You only need the following if you want to build (consolidate and minify) the li
 The project is young! We are a little feature light, but worth using and always growing.
 
 - <tt>G3.Class</tt> - Standard inheritance model.
-- <tt>G3.Game</tt> - Camera, rendered, and animation are all set up for you.
+- <tt>G3.Game</tt> - Camera, renderer, and animation are all set up for you.
 - <tt>G3.Model</tt> - Bind handlers easily, add state to your scene objects.
 - <tt>G3.Event</tt> - Directly sent to you model/view, with rich metadata.
 - <tt>this._super</tt> - Easy override and extension.
 - Growing fast.
 
+
 ## Simple Example
 
-Here is a simple example using the Game3 framework. By extending the provided base classes, it is easy to customize and override without exposing too much.
+Here is a simple example using the Game3 framework. First, add the library scripts to the <tt>&lt;head&gt;</tt> tag.
+
+    <script type="text/javascript" src="three.min.js"></script>
+    <script type="text/javascript" src="game3.min.js"></script>
+
+By extending the provided base classes, it is easy to customize and override without exposing too much. During construction, run your own <tt>init</tt> function, and create/configure the objects you want.
 
     var Game = G3.Game.extend({
       init: function(el) {
@@ -45,7 +51,7 @@ Here is a simple example using the Game3 framework. By extending the provided ba
       }
     });
 
-Declaring models and specifying how they'll be rendered is easy. Simply extend the base <tt>Model</tt> class, and only override or supply methods you need.
+Declaring models and specifying how they'll be rendered is easy. Just extend the base <tt>Model</tt> class, and only override or supply methods you need. Additionally, binding event handlers is simple. If you have provided a handler, it will be called transparently. All the projection math is done for you. In an MVC-like pattern, you can operate on the highest level app class from here.
 
     var Cube = G3.Model.extend({
       init: function(game) {
@@ -64,9 +70,6 @@ Declaring models and specifying how they'll be rendered is easy. Simply extend t
         this.cube.rotation.y += 0.02;
       },
 
-Binding event handlers is simple. If you have provided a handler, it will be called transparently. All the projection math is done for you. In an MVC-like pattern, you can operate on the highest level app class from here.
-
-      // Continuing to define Cube class.
       mouseover: function(event) {
         var rand = Math.floor(Math.random() * 0xFFFFFF);
         this.cube.material.color.setHex(rand);
@@ -83,5 +86,5 @@ All that's left is to create an instance of the <tt>App</tt>, and provide it a c
     var el = document.getElementById('game');
     var game = new Game(el);
 
-You can find complete examples in the <tt>test</tt> folder. A minified version of the library can be found in the build folder.
+You can find complete examples in the <tt>test</tt> folder. A minified version of the library can be found in the build folder. Questions? Feel free to contact me or post an issue.
 
