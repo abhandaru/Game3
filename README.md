@@ -11,7 +11,7 @@ You only need the following if you want to build (consolidate and minify) the li
 - <tt>make</tt> -- We use GNU make as a command line tool.
 - <tt>uglifyjs</tt> -- We use a global UglifyJS install.
 
-## A Simple Example
+## Simple Example
 
 Here is a simple example using the Game3 framework. By extending the provided base classes, it is easy to customize and override without exposing too much.
 
