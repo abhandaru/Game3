@@ -1,8 +1,8 @@
 // @copyright 2013
 // @author Adu Bhandaru
-// G3 Light model for quick point lighting.
+// Game3 Light model for quick point lighting.
 
-G3.Light = G3.Class.extend({
+Game3.Light = Game3.Class.extend({
 
   init: function(game, color, position) {
     this.game = game;

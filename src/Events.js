@@ -2,7 +2,7 @@
 // @author Adu Bhandaru
 // Logic for sending messages to objects.
 
-G3.Events = G3.Class.extend({
+Game3.Events = Game3.Class.extend({
 
   init: function(game) {
     // save game ref to send messages to
@@ -15,6 +15,7 @@ G3.Events = G3.Class.extend({
     this.lastMousePosition = new THREE.Vector2(0, 0);
     this.lastOver = null;
     this.lastClick = null;
+    this.lastDrag = null;
 
     // delegate tasks
     this.bind(game.canvas);
@@ -49,7 +50,7 @@ G3.Events = G3.Class.extend({
     var that = this;
     return function(event) {
       var coords = new THREE.Vector2(event.layerX, event.layerY);
-      var eventG3 = new G3.Event({
+      var eventG3 = new Game3.Event({
         delta2D:  coords.clone().sub(that.lastMousePosition),
         point2D:  coords.clone()
       });
@@ -64,7 +65,7 @@ G3.Events = G3.Class.extend({
           point3D: target.point,
           face: target.face,
           mesh: target.object,
-          model: target.object.G3Model
+          model: target.object.Game3Model
         });
       } else {
         eventG3.set({ model: that.game });
@@ -109,6 +110,11 @@ G3.Events = G3.Class.extend({
     this.isMouseDown = true;
     var handler = event.model.mousedown;
     this.sendEvent(event.model, handler, event);
+    // run drop handler
+    if (this.lastDrag) {
+      this.sendEvent(this.lastDrag, this.lastDrag.mousedrop, event);
+      this.lastDrag = null;
+    }
   },
 
 
@@ -129,7 +135,10 @@ G3.Events = G3.Class.extend({
     }
     // check for drags
     if (this.isMouseDown && this.lastClick === target) {
+      this.lastDrag = target;
       this.sendEvent(target, target.mousedrag, event);
+    } else if (this.isMouseDown && this.lastDrag) {
+      this.sendEvent(this.lastDrag, this.lastDrag.mousedrag, event);
     }
   },
 
@@ -137,7 +146,7 @@ G3.Events = G3.Class.extend({
   checkFocus: function(current, coords) {
     var focus = this.lastOver;
     if (focus && (!current || focus !== current)) {
-      var event = new G3.Event({
+      var event = new Game3.Event({
         point2D: coords.clone(),
         model: focus
       })
@@ -151,9 +160,9 @@ G3.Events = G3.Class.extend({
   /**
    * If the model/view has a handler for this event, we will call it.
    * These handler names will be published to the API.
-   * @param {G3.Model} model The model/view to send the event to.
-   * @param {Function(G3.Event)} handler The handler to call (if it exists).
-   * @param {G3.Event} event The event to send.
+   * @param {Game3.Model} model The model/view to send the event to.
+   * @param {Function(Game3.Event)} handler The handler to call (if it exists).
+   * @param {Game3.Event} event The event to send.
    */
   sendEvent: function(model, handler, event) {
     if (model && handler && typeof handler == 'function') {

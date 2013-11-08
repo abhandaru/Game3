@@ -5,15 +5,15 @@
  */
 
 // Inspired by base2 and Prototype
-(function(G3) {
+(function(Game3) {
   var initializing = false;
   var fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
 
   // The base Class implementation (does nothing)
-  G3.Class = function() { };
+  Game3.Class = function() { };
 
   // Create a new Class that inherits from this class
-  G3.Class.extend = function(prop) {
+  Game3.Class.extend = function(prop) {
     prop = (prop === undefined) ? {} : prop;
     var _super = this.prototype;
 
@@ -65,4 +65,4 @@
 
     return Class;
   };
-})(G3);
+})(Game3);

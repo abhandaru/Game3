@@ -1,14 +1,14 @@
 // @copyright 2013
 // @author Adu Bhandaru
-// The G3 namespace contains no state.
+// The Game3 namespace contains no state.
 
 (function(window) {
 
 // create a namespace
-var G3 = window.G3 = { };
+var Game3 = window.Game3 = { };
 
 // get WebGL support
-G3.webgl = (function () {
+Game3.webgl = (function () {
   try {
     return !!window.WebGLRenderingContext
         && !!document.createElement('canvas').getContext('experimental-webgl');
@@ -18,8 +18,8 @@ G3.webgl = (function () {
 })();
 
 // renderer factory accounts for WebGL support
-G3.createRenderer = function(width, height) {
-  if(G3.webgl) {
+Game3.createRenderer = function(width, height) {
+  if(Game3.webgl) {
     var renderer = new THREE.WebGLRenderer({
       antialias: true,            // to get smoother output
       preserveDrawingBuffer: true // to allow screenshot
@@ -33,7 +33,7 @@ G3.createRenderer = function(width, height) {
 };
 
 // scene factory
-G3.createScene = function(camera) {
+Game3.createScene = function(camera) {
   var scene = new THREE.Scene();
   scene.add(camera);
   camera.lookAt(scene.position);
@@ -47,7 +47,7 @@ G3.createScene = function(camera) {
  * @param {Object} options The options hash.
  * @return {THREE.Camera} A camera to render the scene with.
  */
-G3.createCamera = function(options) {
+Game3.createCamera = function(options) {
   // merge the options
   options = options || { };
   var viewAngle = options.viewAngle || 60;
@@ -67,7 +67,7 @@ G3.createCamera = function(options) {
  * @param {Object} caller The context to run the animate function in.
  * @param {Function} renderFn Animation function.
  */
-G3.renderLoop = function(caller, renderFn) {
+Game3.renderLoop = function(caller, renderFn) {
   var render = function() {
     window.requestAnimationFrame(render);
     renderFn.apply(caller);

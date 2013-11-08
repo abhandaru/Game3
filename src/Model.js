@@ -2,7 +2,7 @@
 // @author Adu Bhandaru
 // Event handling and view logic.
 
-G3.Model = G3.Class.extend({
+Game3.Model = Game3.Class.extend({
 
   // Override this method to create a custom object
   init: function(game) {
@@ -12,7 +12,7 @@ G3.Model = G3.Class.extend({
 
   setMesh: function(mesh) {
     this.mesh = mesh;
-    this.mesh.G3Model = this;
+    this.mesh.Game3Model = this;
   },
 
   show: function(interactive) {

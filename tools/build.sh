@@ -8,7 +8,7 @@ echo ">> Building ..."
 
 IN_DIR="src"
 OUT_DIR="build"
-FILES=("G3.js" "Class.js" "Model.js" "Light.js" "Event.js" "Events.js" "Game.js")
+FILES=("Game3.js" "Class.js" "Model.js" "Light.js" "Event.js" "Events.js" "Game.js")
 MINIFIER="uglifyjs"
 OUTPUT="game3.min.js"
 

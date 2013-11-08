@@ -1,8 +1,8 @@
 // @copyright 2013
 // @author Adu Bhandaru
-// The G3 event class.
+// The Game3 event class.
 
-G3.Event = G3.Class.extend({
+Game3.Event = Game3.Class.extend({
 
   init: function(params) {
     this.set(params);

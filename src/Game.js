@@ -2,7 +2,7 @@
 // @author Adu Bhandaru
 // Outermost game class.
 
-G3.Game = G3.Class.extend({
+Game3.Game = Game3.Class.extend({
 
   /**
    * Called when the object is constructed.
@@ -19,15 +19,15 @@ G3.Game = G3.Class.extend({
     this.height = height;
 
     // set up rendering environement
-    this.camera = G3.createCamera({ aspect: width/height });
-    this.scene = G3.createScene(this.camera);
-    this.renderer = G3.createRenderer(width, height);
+    this.camera = Game3.createCamera({ aspect: width/height });
+    this.scene = Game3.createScene(this.camera);
+    this.renderer = Game3.createRenderer(width, height);
     this.canvas = this.renderer.domElement;
     this.el.appendChild(this.canvas);
 
     // delegate tasks
-    this.events = new G3.Events(this);
-    G3.renderLoop(this, this.render);
+    this.events = new Game3.Events(this);
+    Game3.renderLoop(this, this.render);
   },
 
 

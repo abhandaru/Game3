@@ -1,18 +1,23 @@
-var Game = G3.Game.extend({
+var Game = Game3.Game.extend({
   init: function(el) {
     this._super(el);
 
     // make a cube and a light
     this.cube = new Cube(this);
-    this.light = new G3.Light(this, 0xFFFFFF, new THREE.Vector3(400, 300, -400));
+    this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(400, 300, -400));
 
     // show objects
     this.cube.show(true);
     this.light.show();
+  },
+
+  mousedrag: function() {
+    console.log('drag');
   }
+
 });
 
-var Cube = G3.Model.extend({
+var Cube = Game3.Model.extend({
   init: function(game) {
     this._super(game);
 
