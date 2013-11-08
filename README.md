@@ -1,6 +1,6 @@
 # Game3
 
-Game3 (G3) is a JavaScript framework to write 3D apps using <a href="http://threejs.org/">ThreeJS</a>.
+__Game3__ is a JavaScript framework to write 3D apps using <a href="http://threejs.org/">ThreeJS</a>.
 
 The project is currently in it's infancy. The main problem with most ThreeJS apps is that there is a lot of exposed boilerplate code, and no consistent way to handle events with objects in the scene. Track this project on Github: <a href="https://github.com/abhandaru/Game3">Game3</a>
 
@@ -15,10 +15,10 @@ You only need the following if you want to build (consolidate and minify) the li
 ## Features
 The project is young! We are a little feature light, but worth using and always growing.
 
-- <tt>G3.Class</tt> - Standard inheritance model.
-- <tt>G3.Game</tt> - Camera, renderer, and animation are all set up for you.
-- <tt>G3.Model</tt> - Bind handlers easily, add state to your scene objects.
-- <tt>G3.Event</tt> - Directly sent to you model/view, with rich metadata.
+- <tt>Game3.Class</tt> - Standard inheritance model.
+- <tt>Game3.Game</tt> - Camera, renderer, and animation are all set up for you.
+- <tt>Game3.Model</tt> - Bind handlers easily, add state to your scene objects.
+- <tt>Game3.Event</tt> - Directly sent to you model/view, with rich metadata.
 - <tt>this._super</tt> - Easy override and extension.
 - Growing fast.
 
@@ -32,13 +32,13 @@ Here is a simple example using the Game3 framework. First, add the library scrip
 
 By extending the provided base classes, it is easy to customize and override without exposing too much. During construction, run your own <tt>init</tt> function, and create/configure the objects you want.
 
-    var Game = G3.Game.extend({
+    var Game = Game3.Game.extend({
       init: function(el) {
         this._super(el);
 
         // make a cube and a light
         this.cube = new Cube(this);
-        this.light = new G3.Light(this, 0xFFFFFF, new THREE.Vector3(200, 150, -200));
+        this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(200, 150, -200));
 
         // show objects
         this.cube.show(true); // true -> interactive
@@ -53,7 +53,7 @@ By extending the provided base classes, it is easy to customize and override wit
 
 Declaring models and specifying how they'll be rendered is easy. Just extend the base <tt>Model</tt> class, and only override or supply methods you need. Additionally, binding event handlers is simple. If you have provided a handler, it will be called transparently. All the projection math is done for you. In an MVC-like pattern, you can operate on the highest level app class from here.
 
-    var Cube = G3.Model.extend({
+    var Cube = Game3.Model.extend({
       init: function(game) {
         this._super(game);
 
