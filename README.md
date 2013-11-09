@@ -18,7 +18,7 @@ The project is young! We are a little feature light, but worth using and always 
 - <tt>Game3.Class</tt> - Standard inheritance model.
 - <tt>Game3.Game</tt> - Camera, renderer, and animation are all set up for you.
 - <tt>Game3.Model</tt> - Bind handlers easily, add state to your scene objects.
-- <tt>Game3.Event</tt> - Directly sent to you model/view, with rich metadata.
+- <tt>Game3.Event</tt> - Directly sent to your model/view, with rich metadata.
 - <tt>this._super</tt> - Easy override and extension.
 - Growing fast.
 
@@ -36,7 +36,7 @@ By extending the provided base classes, it is easy to customize and override wit
       init: function(el) {
         // make a cube and a light
         this.cube = new Cube(this);
-        this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(200, 150, -200));
+        this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(400, 300, -400));
 
         // show objects
         this.cube.show(true); // true -> interactive
