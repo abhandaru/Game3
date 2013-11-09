@@ -1,7 +1,7 @@
 var Game = Game3.Game.extend({
   init: function(el) {
     // make a ball and a light
-    this.ball = new Ball(this);
+    this.ball = new Ball(this, 100);
     this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(400, 300, -400));
 
     // show objects
@@ -16,13 +16,13 @@ var Game = Game3.Game.extend({
 });
 
 var Ball = Game3.Model.extend({
-  init: function(game) {
+  init: function(game, radius) {
     // state
     this.dx = 4;
 
     // set up geometry
     var grey = new THREE.MeshLambertMaterial({color: 0xCCCCCC});
-    this.ball = new THREE.Mesh(new THREE.SphereGeometry(100, 32, 24), grey);
+    this.ball = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 24), grey);
 
     // set object
     this.setMesh(this.ball);
