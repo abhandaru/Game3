@@ -5,11 +5,11 @@
 Game3.Game = Game3.Class.extend({
 
   /**
-   * Called when the object is constructed.
-   * Logic that sets up the game. This means setting up the canvas (mostly).
+   * Called before the object is constructed.
+   * Logic sets up the camera, scene, renderer, and events.
    * @param {HTMLElement} A container for your application.
    */
-  init: function(el) {
+  before_init: function(el) {
     this.el = el;
     var width = el.offsetWidth;
     var height = el.offsetHeight;
@@ -31,12 +31,22 @@ Game3.Game = Game3.Class.extend({
 
 
   /**
+   * This is run after your custom init method.
    * Start the render loop.
    * You should only do this when you are done initializing.
+   * @param {HTMLElement} A container for your application.
    */
-  start: function() {
+  after_init: function(el) {
     Game3.renderLoop(this, this.render);
   },
+
+
+  /**
+   * Custom init method.
+   * This should be overriden in the subclass.
+   * @param {HTMLElement} A container for your application.
+   */
+  init: function(el) { },
 
 
   /**
