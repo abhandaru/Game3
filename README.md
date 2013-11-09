@@ -43,6 +43,7 @@ By extending the provided base classes, it is easy to customize and override wit
         // show objects
         this.cube.show(true); // true -> interactive
         this.light.show();
+        this.start();
       },
 
       // gets called every timer fired
