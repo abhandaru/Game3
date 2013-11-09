@@ -9,6 +9,7 @@ var Game = Game3.Game.extend({
     // show objects
     this.cube.show(true);
     this.light.show();
+    this.start();
   },
 
   mousedrag: function() {

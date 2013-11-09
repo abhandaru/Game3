@@ -27,6 +27,14 @@ Game3.Game = Game3.Class.extend({
 
     // delegate tasks
     this.events = new Game3.Events(this);
+  },
+
+
+  /**
+   * Start the render loop.
+   * You should only do this when you are done initializing.
+   */
+  start: function() {
     Game3.renderLoop(this, this.render);
   },
 
@@ -74,9 +82,7 @@ Game3.Game = Game3.Class.extend({
    * @return {void}
    */
   render: function() {
-    try {
-      this.animate();
-    } catch (e) { }
+    this.animate();
     this.renderer.render(this.scene, this.camera);
   }
 
