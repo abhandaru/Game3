@@ -13,7 +13,7 @@ var Game = Game3.Game.extend({
 
     // track the collisions
     this.collisions = new Game3.Collisions(
-        [this.big, this.small], Game3.COLLISIONS_GENERAL);
+        [this.big, this.small], Game3.COLLISIONS_SPHERES);
 
     // show objects
     this.big.show();
@@ -42,8 +42,13 @@ var Ball = Game3.Model.extend({
 
   timerfired: function() {
     if (this.ball.position.length() > 300)
-      this.velocity.negate();
+      this.velocity.reflect(this.ball.position).negate();
     this.ball.position.add(this.velocity);
+    // change colors
+    var red = Math.floor(0xFF * ((this.ball.position.x + 350) / 700));
+    var blue = 0xFF - red;
+    var color = (red << 16) | blue;
+    this.ball.material.color.setHex(color);
   },
 
   collision: function(collision) {

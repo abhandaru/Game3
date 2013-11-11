@@ -106,6 +106,7 @@ Game3.Collisions = Game3.Class.extend({
 
 
   _sendCollision: function(model, collisions) {
+    // send the collision event to the handler
     var handler = model.collision;
     if (handler && typeof handler == 'function') {
       handler.apply(model, [collisions]);

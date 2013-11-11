@@ -54,7 +54,7 @@ Game3.createCamera = function(options) {
   var aspect = options.aspect || 1;
   var near = options.near || 0.1;
   var far = options.far || 10000;
-  var position = options.position || (new THREE.Vector3(0, 500, 500));
+  var position = options.position || (new THREE.Vector3(500, 500, 500));
 
   // create the camera
   var camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
