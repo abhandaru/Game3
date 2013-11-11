@@ -32,6 +32,15 @@ Game3.Model = Game3.Class.extend({
 
 
   /**
+   * Public interface for getting the mesh for this model.
+   * TODO: This might change to return a THREE.Object3D
+   * @return {THREE.Mesh} The mesh associated with this model.
+   */
+  getMesh: function() {
+    return this.mesh;
+  },
+
+  /**
    * Render the object in the scence.
    * You only need to run this once. However, if you want to change if
    * something is interactive or not, you'll have to remove it, then show

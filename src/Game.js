@@ -31,6 +31,14 @@ Game3.Game = Game3.Class.extend({
 
 
   /**
+   * Custom init method.
+   * This should be overriden in the subclass.
+   * @param {HTMLElement} A container for your application.
+   */
+  init: function(el) { },
+
+
+  /**
    * This is run after your custom init method.
    * Start the render loop.
    * You should only do this when you are done initializing.
@@ -39,14 +47,6 @@ Game3.Game = Game3.Class.extend({
   after_init: function(el) {
     Game3.renderLoop(this, this.render);
   },
-
-
-  /**
-   * Custom init method.
-   * This should be overriden in the subclass.
-   * @param {HTMLElement} A container for your application.
-   */
-  init: function(el) { },
 
 
   /**
@@ -84,7 +84,7 @@ Game3.Game = Game3.Class.extend({
    * For example, animations may require you to update an object's position.
    * @return {void}
    */
-  animate: function() { },
+  timerfired: function() { },
 
 
   /**
@@ -92,7 +92,7 @@ Game3.Game = Game3.Class.extend({
    * @return {void}
    */
   render: function() {
-    this.animate();
+    this.timerfired();
     this.renderer.render(this.scene, this.camera);
   }
 
