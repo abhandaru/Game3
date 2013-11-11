@@ -9,6 +9,14 @@ Game3.COLLISIONS_SPHERES = 2;
 
 Game3.Collisions = Game3.Class.extend({
 
+  /**
+   * Constructor for the collision tracker.
+   * Tracks all models in the system you want, and sends collision events to
+   * them every time check is run using a predetermined collision detector.
+   * @param {Array<Game3.Model>} models A list of modules to track.
+   * @param {DEFINE} type The type of detector to use. If no detector is
+   *     selected, a general purpose (slower) one will be used.
+   */
   init: function(models, type) {
     // options
     this.models = models || [ ];
@@ -16,11 +24,11 @@ Game3.Collisions = Game3.Class.extend({
     type = (type !== undefined) ? type : Game3.COLLISIONS_GENERAL;
     switch (type) {
       case Game3.COLLISIONS_GENERAL:
-        this.checkFn = this._check; break;
+        this.checkFn = this._checkGeneral; break;
       case Game3.COLLISIONS_SPHERES:
         this.checkFn = this._checkSphere; break;
       default:
-        this.checkFn = this._check;
+        this.checkFn = this._checkGeneral;
     }
   },
 
@@ -61,13 +69,18 @@ Game3.Collisions = Game3.Class.extend({
   },
 
 
+  //
+  // Private methods
+  //
+
+
   /**
    * Generalized check intersection function.
    * See: http://stackoverflow.com/a/12264206/408940
    * @param {THREE.Mesh} mesh Object to check against.
    * @return {Game3.Collision?} collision A collision object, if one occurred.
    */
-  _check: function(meshA, meshB) {
+  _checkGeneral: function(meshA, meshB) {
     var collision = null;
     var err = 10;
     // iterate through all the verticies.
@@ -113,11 +126,11 @@ Game3.Collisions = Game3.Class.extend({
   },
 
 
-  _sendCollision: function(model, collisions) {
+  _sendCollision: function(model, collision) {
     // send the collision event to the handler
     var handler = model.collision;
     if (handler && typeof handler == 'function') {
-      handler.apply(model, [collisions]);
+      handler.apply(model, [collision]);
       return true;
     }
     return false;
