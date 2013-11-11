@@ -19,6 +19,7 @@ The project is young! We are a little feature light, but worth using and always 
 - <tt>Game3.Game</tt> - Camera, renderer, and animation are all set up for you.
 - <tt>Game3.Model</tt> - Bind handlers easily, add state to your scene objects.
 - <tt>Game3.Event</tt> - Directly sent to your model/view, with rich metadata.
+- <tt>Game3.Collisions</tt> - Send your model/view collision events.
 - <tt>this._super</tt> - Easy override and extension.
 - Growing fast.
 
