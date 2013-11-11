@@ -4,7 +4,31 @@ body {
   font-family: Arial, Helvetica, Sans-Serif;
 }
 
+.info .nav {
+  float: right;
+  margin: 20px 20px 0px 0px;
+  padding: 10px 0px 10px 0px;
+  border: 1px solid #DDD;
+  border-radius: 3px;
+}
+
+.info .nav a {
+  color: #007BFF;
+  text-decoration: none;
+  padding: 3px 20px;
+  border-left: 1px solid #EEE;
+}
+
+.info .nav a:first-child {
+  border-left: 0px solid #EEE;
+}
+
+.info .nav a:hover {
+  color: #000;
+}
+
 .info {
+  min-height: 100%;
   position: absolute;
   top: 0px;
   left: 50px;
@@ -38,9 +62,9 @@ body {
   font-size: 16px;
 }
 
-.info p a {
+.info a, .info p a {
   text-decoration: none;
-  color: #5BB000;
+  color: #007BFF;
 }
 
 .info p a:hover {
