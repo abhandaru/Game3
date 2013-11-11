@@ -2,11 +2,26 @@
 // @author Adu Bhandaru
 // The Game3 collision detector object.
 
+// constants
+Game3.COLLISIONS_GENERAL = 1;
+Game3.COLLISIONS_SPHERES = 2;
+
+
 Game3.Collisions = Game3.Class.extend({
 
-  init: function(models) {
+  init: function(models, type) {
+    // options
     this.models = models || [ ];
-    this.checkFn = this._check;
+    // figure out which check function to use
+    type = (type !== undefined) ? type : Game3.COLLISIONS_GENERAL;
+    switch (type) {
+      case Game3.COLLISIONS_GENERAL:
+        this.checkFn = this._check; break;
+      case Game3.COLLISIONS_SPHERES:
+        this.checkFn = this._checkSphere; break;
+      default:
+        this.checkFn = this._check;
+    }
   },
 
 
@@ -50,21 +65,43 @@ Game3.Collisions = Game3.Class.extend({
    */
   _check: function(meshA, meshB) {
     var collision = null;
+    var err = 10;
     // iterate through all the verticies.
     meshA.geometry.vertices.some(function(vertex) {
       var globalVertex = vertex.clone().applyProjection(meshA.matrix);
       var direction = globalVertex.sub(meshA.position);
+      var dist = direction.length();
       // create ray and test intersections
-      var ray = new THREE.Raycaster(meshA.position, direction.clone().normalize());
+      var ray = new THREE.Raycaster(
+        meshA.position, direction.normalize(), 0, dist + err);
       var intersects = ray.intersectObject(meshB);
       if (intersects.length > 0 &&
-          intersects[0].distance < direction.length()) {
-        collision = this._getCollision(vertex, intersects[0]);
+          intersects[0].distance < dist) {
+        collision = this._getCollision(meshA.position, vertex, intersects[0]);
         return true;
       }
     }, this);
     // clean up
     return collision;
+  },
+
+
+  _checkSphere: function(sphereA, sphereB) {
+    var radiusA = sphereA.geometry.radius;
+    var radiusB = sphereB.geometry.radius;
+    var distance = sphereB.position.clone().sub(sphereA.position);
+    if (distance.length() < radiusA + radiusB) {
+      var point = distance.normalize().multiplyScalar(radiusA).add(sphereA.position);
+      return new Game3.Collision({
+        vertex: null,
+        point: point,
+        face: null,
+        normal: distance.normalize().negate(),
+        mesh: sphereB,
+        other: sphereB.Game3Model
+      });
+    }
+    return null;
   },
 
 
@@ -78,7 +115,7 @@ Game3.Collisions = Game3.Class.extend({
   },
 
 
-  _getCollision: function(vertex, intersection) {
+  _getCollision: function(center, vertex, intersection) {
     return new Game3.Collision({
       vertex: vertex,
       point: intersection.point,

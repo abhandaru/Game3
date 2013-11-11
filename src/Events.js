@@ -52,7 +52,7 @@ Game3.Events = Game3.Class.extend({
       var coords = new THREE.Vector2(event.layerX, event.layerY);
       var eventG3 = new Game3.Event({
         delta2D:  coords.clone().sub(that.lastMousePosition),
-        point2D:  coords.clone()
+        point2D:  coords
       });
 
       // see if we hit anything in the scene

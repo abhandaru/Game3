@@ -9,13 +9,17 @@ Game3.Collision = Game3.Class.extend({
   },
 
   set: function(params) {
-    params      = params || { };
-    this.vertex = params.vertex || this.vertex || null;
-    this.point  = params.point  || this.point  || null;
-    this.face   = params.face   || this.face   || null;
-    this.normal = params.normal || this.normal || null;
-    this.mesh   = params.mesh   || this.mesh   || null;
-    this.other  = params.other  || this.other  || null;
+    params         = params         || { };
+    this.vertex    = params.vertex  || this.vertex    || null;
+    this.point     = params.point   || this.point     || null;
+    this.face      = params.face    || this.face      || null;
+    this._normal   = params.normal  || this._normal   || null;
+    this.mesh      = params.mesh    || this.mesh      || null;
+    this.other     = params.other   || this.other     || null;
+  },
+
+  normal: function() {
+    return this._normal || (this.face && this.face.normal) || null;
   }
 
 });

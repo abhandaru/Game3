@@ -12,7 +12,8 @@ var Game = Game3.Game.extend({
     this.small = new Ball(this, 75, smallPos, smallVelocity);
 
     // track the collisions
-    this.collisions = new Game3.Collisions([this.big, this.small]);
+    this.collisions = new Game3.Collisions(
+        [this.big, this.small], Game3.COLLISIONS_GENERAL);
 
     // show objects
     this.big.show();
@@ -46,6 +47,6 @@ var Ball = Game3.Model.extend({
   },
 
   collision: function(collision) {
-    this.velocity.negate();
+    this.velocity.reflect(collision.normal()).negate();
   }
 });
