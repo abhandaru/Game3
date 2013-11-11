@@ -44,8 +44,8 @@ By extending the provided base classes, it is easy to customize and override wit
       },
 
       // gets called every timer fired
-      animate: function() {
-        this.cube.animate();
+      timerfired: function() {
+        this.cube.timerfired();
       }
     });
 
@@ -61,7 +61,7 @@ Declaring models and specifying how they'll be rendered is easy. Just extend the
         this.setMesh(this.cube);
       },
 
-      animate: function() {
+      timerfired: function() {
         this.cube.rotation.x += 0.01;
         this.cube.rotation.y += 0.02;
       },
