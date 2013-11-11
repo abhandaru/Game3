@@ -4,7 +4,7 @@ var Game = Game3.Game.extend({
     this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(400, 300, -400));
 
     // set up spheres
-    var bigPos = new THREE.Vector3(100, 0, 0);
+    var bigPos = new THREE.Vector3(100, 13, 0);
     var bigVelocity = new THREE.Vector3(4, 0, 0);
     var smallPos = new THREE.Vector3(-100, 0, 0);
     var smallVelocity = new THREE.Vector3(-4, 0, 0);
@@ -52,6 +52,7 @@ var Ball = Game3.Model.extend({
   },
 
   collision: function(collision) {
+    this.ball.position.add(collision.correction());
     this.velocity.reflect(collision.normal()).negate();
   }
 });

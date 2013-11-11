@@ -73,11 +73,11 @@ Game3.Collisions = Game3.Class.extend({
       var dist = direction.length();
       // create ray and test intersections
       var ray = new THREE.Raycaster(
-        meshA.position, direction.normalize(), 0, dist + err);
+        meshA.position, direction.clone().normalize(), 0, dist + err);
       var intersects = ray.intersectObject(meshB);
       if (intersects.length > 0 &&
           intersects[0].distance < dist) {
-        collision = this._getCollision(meshA.position, vertex, intersects[0]);
+        collision = this._getCollision(direction, intersects[0]);
         return true;
       }
     }, this);
@@ -90,13 +90,17 @@ Game3.Collisions = Game3.Class.extend({
     var radiusA = sphereA.geometry.radius;
     var radiusB = sphereB.geometry.radius;
     var distance = sphereB.position.clone().sub(sphereA.position);
-    if (distance.length() < radiusA + radiusB) {
-      var point = distance.normalize().multiplyScalar(radiusA).add(sphereA.position);
+    var difference = distance.length() - (radiusA + radiusB);
+    if (difference < 0) {
+      var unit = distance.normalize();
+      var point = unit.clone().multiplyScalar(radiusA).add(sphereA.position);
+      var normal = unit.clone().negate();
+      var correction = unit.clone().multiplyScalar(difference / 2);
       return new Game3.Collision({
-        vertex: null,
         point: point,
         face: null,
-        normal: distance.normalize().negate(),
+        normal: normal,
+        correction: correction,
         mesh: sphereB,
         other: sphereB.Game3Model
       });
@@ -116,13 +120,15 @@ Game3.Collisions = Game3.Class.extend({
   },
 
 
-  _getCollision: function(center, vertex, intersection) {
+  _getCollision: function(direction, intersection) {
+    var difference = intersection.distance - direction.length();
+    var correction = direction.clone().normalize().multiplyScalar(difference/2);
     return new Game3.Collision({
-      vertex: vertex,
       point: intersection.point,
       face: intersection.face,
       mesh: intersection.object,
-      other: intersection.object.Game3Model
+      other: intersection.object.Game3Model,
+      correction: correction
     });
   }
 });
