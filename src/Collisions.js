@@ -25,6 +25,10 @@ Game3.Collisions = Game3.Class.extend({
   },
 
 
+  /**
+   * Add more models to track for collisions.
+   * @param {Game3.Model} model The model to track.
+   */
   track: function(model) {
     this.models.push(model);
   },
@@ -61,7 +65,7 @@ Game3.Collisions = Game3.Class.extend({
    * Generalized check intersection function.
    * See: http://stackoverflow.com/a/12264206/408940
    * @param {THREE.Mesh} mesh Object to check against.
-   * @return {Game3.Collision} collisions A list of collisions.
+   * @return {Game3.Collision?} collision A collision object, if one occurred.
    */
   _check: function(meshA, meshB) {
     var collision = null;

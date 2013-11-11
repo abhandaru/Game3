@@ -4,20 +4,26 @@ var Game = Game3.Game.extend({
     this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(400, 300, -400));
 
     // set up spheres
-    var bigPos = new THREE.Vector3(100, 13, 0);
-    var bigVelocity = new THREE.Vector3(4, 0, 0);
     var smallPos = new THREE.Vector3(-100, 0, 0);
-    var smallVelocity = new THREE.Vector3(-4, 0, 0);
-    this.big = new Ball(this, 100, bigPos, bigVelocity);
+    var smallVelocity = new THREE.Vector3(-10, 0, 0);
+    var medPos = new THREE.Vector3(0, 100, 50);
+    var medVelocity = new THREE.Vector3(0, -10, 0);
+    var bigPos = new THREE.Vector3(100, 13, 0);
+    var bigVelocity = new THREE.Vector3(10, 0, 0);
+
+    // save references
     this.small = new Ball(this, 75, smallPos, smallVelocity);
+    this.med = new Ball(this, 85, medPos, medVelocity);
+    this.big = new Ball(this, 100, bigPos, bigVelocity);
 
     // track the collisions
     this.collisions = new Game3.Collisions(
-        [this.big, this.small], Game3.COLLISIONS_SPHERES);
+        [this.small, this.med, this.big], Game3.COLLISIONS_SPHERES);
 
     // show objects
-    this.big.show();
     this.small.show();
+    this.med.show();
+    this.big.show();
     this.light.show();
   },
 
@@ -25,6 +31,7 @@ var Game = Game3.Game.extend({
   timerfired: function() {
     this.collisions.check();
     this.big.timerfired();
+    this.med.timerfired();
     this.small.timerfired();
   }
 });
