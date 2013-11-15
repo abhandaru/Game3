@@ -44,15 +44,15 @@ Extend a class. You get most of the features you would expect: inherit or overri
     var person = new Person('Foo');
     var ninja = new Ninja('Bar');
 
-    person.talk()           // My name is Foo!
-    ninja.talk()            // Drinks at the Bar.
-    ninja instanceof Person // true
-    ninja instanceof Class  // true
+    person.talk()                 // My name is Foo!
+    ninja.talk()                  // Drinks at the Bar.
+    ninja instanceof Person       // true
+    ninja instanceof Game3.Class  // true
 
 
 ### Instance Methods
 
-### `.after_init(args ...)`
+### `.after_init([args ...])`
 
 This method is called right _after_ the `init()` method during construction. The intention here is to make it easy to wrap the logic of an overriden `init()` method (by a subclass, for example). This is to avoid calling the `_super()` method any time you need to do post set up work after some configuration.
 
@@ -68,7 +68,7 @@ __Note:__ `after_init()` is supplied the same arguments as the `init()` construc
     file.full  // foo.txt
 
 
-### `.before_init(args ...)`
+### `.before_init([args ...])`
 
 This method is called right _before_ the `init()` method during construction. The intention here is to make it easy to wrap the logic of an overriden `init()` method (by a subclass, for example). This is to avoid calling the `_super()` method any time you need to do post set up work after some configuration.
 
@@ -84,9 +84,17 @@ __Note:__ `before_init()` is supplied the same arguments as the `init()` constru
     file.full  // foo.txt
 
 
-### `.init(args ...)`
+### `.init([args ...])`
 
 This is the main constructor. Logic placed here will be executed when the object is instantiated. When you define an`init()` constructor for your class, you will override the superclass's `init()` method. You may still call the original method using `this._super(args ...)`.
+
+    var File = Game3.Class.extend({
+      init: function(name) { this.name = name + '.txt'; }
+    });
+
+    var file = new File('foo');
+    file.name                    // foo.txt
+    file instanceof Game3.Class  // true
 
 
 ## Game3.Collision
@@ -117,19 +125,54 @@ The `correction()` vector offers you (free of charge) a way to handle collisions
 
 
 ## Game3.Collisions
+The `Collisions` class gives you a great way to handle collisions in your `scene`. You _could_ handle all this yourself, which comes in handy if you need heavy customization.
 
-Coming soon.
+### Constructor
 
+### `Collisions([models [, type]])`
+__`models`:__ An optional argument. This is an `Array` of `Game3.Model` objects to register with the `Collisions` object. You can always add or remove from this set later on during execution (using `track()` for example).
+
+__`type`:__ If `type` is not specified, then `Game3.COLLISIONS_GENERAL` is used. This specifies the type of collision checking function to use. General works for most geometries, but it is slower.
+
+Currently the only supported types are `Game3.COLLISIONS_GENERAL` and `Game3.COLLISIONS_SPHERES`. _Later we want to support custom check functions, if provided._
+
+    init: function(el) {
+      // setup stuff ...
+      this.collisions = new Game3.Collisions(
+          [this.redBall, this.blueBall], Game3.COLLISIONS_SPHERES);
+    }
+
+
+### Instance Methods
+
+### `.check()`
+This method iterates through every registered `Game3.Model` in the collection and determines whether or not a collision has occurred. If so, a `Collision` event object is created and sent to each model's respective collision handler. The `check()` method is usually called in `timerfired()`.
+
+    timerfired: function() {
+      this.collisions.check();
+    }
+
+### `.track(model)`
+__`model`:__ The model to add to the collection.
+
+All models in the collection will be checked for collisions, and sent `Collision` events accordingly.
+
+    init: function(el) {
+      // setup stuff ...
+      this.collisions = new Game3.Collisions();
+      this.collisions.track(this.redBall);
+      this.collisions.track(this.blueBall);
+    }
 
 ## Game3.Event
-
 Coming soon.
 
 
 ## Game3.Game
-
+Coming soon.
 
 ## Game3.Model
+Coming soon.
     </article>
     <script type="text/javascript">
       var articles = document.getElementsByTagName('article');

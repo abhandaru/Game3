@@ -58,6 +58,13 @@ body {
   font: 200 16px/16px Helvetica Neue, Arial, sans-serif;
 }
 
+.info h3 code {
+  color: #007BFF;
+  background: #EEE;
+  border-radius: 2px;
+  padding: 3px 5px;
+}
+
 .info p {
   padding: 0px 20px 20px 20px;
   margin: 0px;
