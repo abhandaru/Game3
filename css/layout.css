@@ -44,10 +44,11 @@ body {
 }
 
 .info h2 {
-  padding: 20px 20px 10px 20px;
-  margin: 0px;
+  padding: 20px 0px 20px 0px;
+  margin: 0px 20px 20px 20px;
   font-size: 20px;
   font: 200 24px/24px Helvetica Neue, Arial, sans-serif;
+  border-bottom: 1px solid #EEE;
 }
 
 .info h3 {

@@ -88,10 +88,47 @@ __Note:__ `before_init()` is supplied the same arguments as the `init()` constru
 
 This is the main constructor. Logic placed here will be executed when the object is instantiated. When you define an`init()` constructor for your class, you will override the superclass's `init()` method. You may still call the original method using `this._super(args ...)`.
 
+
 ## Game3.Collision
+
+A `Collision` object is sent to any model that has experienced a collision. You can read more about collisions under the `Collisions` class and how to handle collisions in the `Model` class.
+
+### Members
+
+### `.point {THREE.Vector3}`
+The closest point of intersection on the _other_ object.
+
+### `.face {THREE.Face?}`
+A reference to the face of the mesh on the _other_ object where intersetion occurred. This can be useful for deriving normals and other data.
+
+__Note:__ If the `face` attribute is `null`, it means the collision was computed without ray-tracing. This can occur if you use special case collision detectors. See the `Collisions` class for more details.
+
+### `.other {Game3.Model}`
+The other model that was collided with. Useful for performing an action on that model. For example, in physics we may want to exchange momentum in an elastic collision.
+
+
+### Instance Methods
+
+### `.normal() {THREE.Vector3}`
+The normal of the collision. In other words, the orientation of the surface the model collided with. This can be derived for special cases.
+
+### `.correction() {THREE.Vector3}`
+The `correction()` vector offers you (free of charge) a way to handle collisions robustly. Because `timerfired()` is called at about 60 FPS, it is possible for objects in the scene to overlap _before_ triggering a collision. Adding the `correction()` back to your object's position can __prevent some nasty bugs__.
+
+
 ## Game3.Collisions
+
+Coming soon.
+
+
 ## Game3.Event
+
+Coming soon.
+
+
 ## Game3.Game
+
+
 ## Game3.Model
     </article>
     <script type="text/javascript">
