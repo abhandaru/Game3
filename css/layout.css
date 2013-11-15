@@ -50,6 +50,13 @@ body {
   font: 200 24px/24px Helvetica Neue, Arial, sans-serif;
 }
 
+.info h3 {
+  padding: 20px 20px 10px 20px;
+  margin: 0;
+  font-size: 16px;
+  font: 200 16px/16px Helvetica Neue, Arial, sans-serif;
+}
+
 .info p {
   padding: 0px 20px 20px 20px;
   margin: 0px;

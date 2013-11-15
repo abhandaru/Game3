@@ -1,11 +1,14 @@
 <html>
 <head>
   <title>Game3 | Docs</title>
-  <link rel="stylesheet" type="text/css" href="../css/layout.css" />
+  <!-- markdown stuff -->
+  <script type="text/javascript" src="../js/markdown.min.js"></script>
   <!-- prettify stuff -->
-  <link rel="stylesheet" href="http://yandex.st/highlightjs/7.4/styles/default.min.css">
-  <script src="http://yandex.st/highlightjs/7.4/highlight.min.js"></script>
+  <link rel="stylesheet" href="../css/highlight.min.css">
+  <script src="../js/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
+  <!-- custom -->
+  <link rel="stylesheet" type="text/css" href="../css/layout.css" />
 </head>
 <body>
   <div class="info">
@@ -15,9 +18,89 @@
       <a href="../docs/">Docs</a>
     </div>
     <h1>Documentation</h1>
-    <p class="important">Coming soon.</p>
+    <p class="important">Under development.</p>
     <p>For now, be sure to check out the full example pages and the source code on <a href="https://github.com/abhandaru/Game3">GitHub</a>. The code itself is well formed, commented, and split into files.</p>
-    <p>Of course, having documentation would be a whole lot easier. So we are on it.</p>
+    <article>
+## Game3.Class
+
+All classes in `Game3` derive from the base `Class`. It supports a familiar inheritance model, and should prove useful in your object oriented designs.
+
+
+### Static Methods
+
+### `.extend([parameters])`
+
+Extend a class. You get most of the features you would expect: inherit or override methods from the super class. We currently use [John Resig's](http://ejohn.org/blog/simple-javascript-inheritance/) implementation for classical inheritence.
+
+    var Person = Game3.Class.extend({
+      init: function(name) { this.name = name; },
+      talk: function() { return 'My name is ' + this.name + '!'; }
+    });
+
+    var Ninja = Person.extend({
+      talk: function() { return 'Drinks at the ' + this.name + '.'; }
+    });
+
+    var person = new Person('Foo');
+    var ninja = new Ninja('Bar');
+
+    person.talk()           // My name is Foo!
+    ninja.talk()            // Drinks at the Bar.
+    ninja instanceof Person // true
+    ninja instanceof Class  // true
+
+
+### Instance Methods
+
+### `.after_init(args ...)`
+
+This method is called right _after_ the `init()` method during construction. The intention here is to make it easy to wrap the logic of an overriden `init()` method (by a subclass, for example). This is to avoid calling the `_super()` method any time you need to do post set up work after some configuration.
+
+__Note:__ `after_init()` is supplied the same arguments as the `init()` constructor.
+
+    var File = Game3.Class.extend({
+      init: function(name) { this.name = name; },
+      after_init: function(name) { this.full = this.name + '.txt'; }
+    });
+
+    var file = new File('foo');
+    file.name  // foo
+    file.full  // foo.txt
+
+
+### `.before_init(args ...)`
+
+This method is called right _before_ the `init()` method during construction. The intention here is to make it easy to wrap the logic of an overriden `init()` method (by a subclass, for example). This is to avoid calling the `_super()` method any time you need to do post set up work after some configuration.
+
+__Note:__ `before_init()` is supplied the same arguments as the `init()` constructor.
+
+    var File = Game3.Class.extend({
+      before_init: function(name) { this.ext = '.txt'; }
+      init: function(name) { this.full = name + this.ext; },
+    });
+
+    var file = new File('foo');
+    file.ext   // .txt
+    file.full  // foo.txt
+
+
+### `.init(args ...)`
+
+This is the main constructor. Logic placed here will be executed when the object is instantiated. When you define an`init()` constructor for your class, you will override the superclass's `init()` method. You may still call the original method using `this._super(args ...)`.
+
+## Game3.Collision
+## Game3.Collisions
+## Game3.Event
+## Game3.Game
+## Game3.Model
+    </article>
+    <script type="text/javascript">
+      var articles = document.getElementsByTagName('article');
+      for (var i = 0; i < articles.length; i++) {
+        var article = articles[i];
+        article.innerHTML = markdown.toHTML(article.innerHTML);
+      }
+    </script>
   </div>
 </body>
 </html>
