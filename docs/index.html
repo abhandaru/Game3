@@ -165,7 +165,44 @@ All models in the collection will be checked for collisions, and sent `Collision
     }
 
 ## Game3.Event
-Coming soon.
+This is the standard class for event objects sent to handlers in a `Game3.Model`. If the model has a handler for a particular event, it will recieve it. Read more about this under `Game3.Model`.
+
+__Note:__ Right now, `Game3` only handles mouse events. These are the harder kind to handle, since identifying objects in the 3D scene with respect to 2D click coordinates requires ray tracing. Capturing keypresses is simple! _We are currently figuring out what kind of behavior we want from key events._
+
+The following events are currently supported:
+
+- `click`
+- `mousemove`
+- `mousdown`
+- `mouseup`
+- `mouseover`
+- `mouseout`
+- `mousedrag`
+- `mousedrop`
+
+
+### Members
+
+### `distance {number?}`
+The distance from the camera (your viewport) to the object you clicked on. If the distance is `null`, it means you did not click on anything in the scene.
+
+### `delta2D {THREE.Vector2}`
+The change in `x` and `y` since the last mouse event. Useful for dragging without clicking and anything else you can think of!
+
+### `point2D {THREE.Vector2}`
+The point on the canvas you clicked on. This is with respect to the `canvas` element, not to the `document` dimensions or the window.
+
+### `point3D {THREE.Vector3?}`
+The point in the 3D scene that you clicked on. If you did not click on anything in the scene, this value may be `null`.
+
+### `face {THREE.Face?}`
+The particular face of the object you clicked on (if any). If you did not click on an object in the scene, this value will be `null`.
+
+### `mesh {THREE.Mesh?}`
+A reference to the mesh that was sent a mouse event. If no object in the scene recieved a mouse event, this will be `null`.
+
+### `model {Game3.Model?}`
+A reference to the model that recieved the mouse event. Again, if no object in the scene was clicked, this attribute will be `null`. Note: This is usually the same model that we are invoking the event handler for.
 
 
 ## Game3.Game
