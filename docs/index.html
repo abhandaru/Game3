@@ -169,44 +169,80 @@ This is the standard class for event objects sent to handlers in a `Game3.Model`
 
 __Note:__ Right now, `Game3` only handles mouse events. These are the harder kind to handle, since identifying objects in the 3D scene with respect to 2D click coordinates requires ray tracing. Capturing keypresses is simple! _We are currently figuring out what kind of behavior we want from key events._
 
-The following events are currently supported:
+The following event handlers are currently supported:
 
-- `click`
-- `mousemove`
-- `mousdown`
-- `mouseup`
-- `mouseover`
-- `mouseout`
-- `mousedrag`
-- `mousedrop`
+- `click()`
+- `mousemove()`
+- `mousdown()`
+- `mouseup()`
+- `mouseover()`
+- `mouseout()`
+- `mousedrag()`
+- `mousedrop()`
 
 
 ### Members
 
-### `distance {number?}`
+### `.distance {number?}`
 The distance from the camera (your viewport) to the object you clicked on. If the distance is `null`, it means you did not click on anything in the scene.
 
-### `delta2D {THREE.Vector2}`
+### `.delta2D {THREE.Vector2}`
 The change in `x` and `y` since the last mouse event. Useful for dragging without clicking and anything else you can think of!
 
-### `point2D {THREE.Vector2}`
+### `.point2D {THREE.Vector2}`
 The point on the canvas you clicked on. This is with respect to the `canvas` element, not to the `document` dimensions or the window.
 
-### `point3D {THREE.Vector3?}`
+### `.point3D {THREE.Vector3?}`
 The point in the 3D scene that you clicked on. If you did not click on anything in the scene, this value may be `null`.
 
-### `face {THREE.Face?}`
+### `.face {THREE.Face?}`
 The particular face of the object you clicked on (if any). If you did not click on an object in the scene, this value will be `null`.
 
-### `mesh {THREE.Mesh?}`
+### `.mesh {THREE.Mesh?}`
 A reference to the mesh that was sent a mouse event. If no object in the scene recieved a mouse event, this will be `null`.
 
-### `model {Game3.Model?}`
+### `.model {Game3.Model?}`
 A reference to the model that recieved the mouse event. Again, if no object in the scene was clicked, this attribute will be `null`. Note: This is usually the same model that we are invoking the event handler for.
 
 
 ## Game3.Game
-Coming soon.
+The `Game` class houses the highest layer logic for your app. The contructor for this class is the entry point of your program. In other words, all initialization and setup should be invoked with the `init()` method.
+
+To create your own app, you will want to extend the `Game` class. A lot of work is done for you in the `before_init()` and `after_init()` handlers. However, you can always override these methods for customization (if or when you need it).
+
+### Members
+
+### `.camera {THREE.PerspectiveCamera}`
+An instance of the THREE.js `Camera` class. By default, the camera looks at the origin of the scene. You can move, rotate, and modify other properties of the camera as needed.
+
+### `.canvas {HTMLCanvasElement}`
+A reference to the actual `<canvas></canvas>` element in the DOM. You may find this useful, especially if this app is part of a larger web page.
+
+### `.el {HTMLElement}`
+The container element for your `Game3` app. You must pass this container in when calling the `Game` constructor. The `Game` class automatically fits and binds a canvas to this element.
+
+### `.height {number}`
+The height of the canvas.
+
+### `.renderer {THREE.Renderer}`
+A reference to the THREE.js renderer instance that is powering all the 3D drawing. Unless you are on mobile or have an older browser, this should be an instance of `THREE.WebGLRenderer`. Otherwise we will use a (slower) `THREE.CanvasRenderer` which does not leverage WebGL.
+
+### `.scene {THREE.Scene}`
+The scene object tracks all the objects in the app's world. In general, you should be using the provided helpers for adding objects to your scene, as opposed to modifying the scene directly. I'm sure we left some stuff out, so you will have to make any custom tweaks manually for now.
+
+### `.width {number}`
+The width of the canvas.
+
+### Instance Methods
+
+### `.timerfired()`
+Call any logic that would change your game state every timestep. For example, animations may require you to update an object's position. This function is called _roughly_ 60 times a second (to achieve 60 FPS). However, if you are doing heavy computation in each timestep, this rate can drop.
+
+__Note:__ Later on we may decided to pass `timerfired()` the time difference `dt` since the last time it was called. This will be a demand driven feature.
+
+__Note:__ `Game3` correctly uses the `requestAnimationFrame()` shim.
+
+
 
 ## Game3.Model
 Coming soon.
