@@ -210,6 +210,20 @@ The `Game` class houses the highest layer logic for your app. The contructor for
 
 To create your own app, you will want to extend the `Game` class. A lot of work is done for you in the `before_init()` and `after_init()` handlers. However, you can always override these methods for customization (if or when you need it).
 
+### Constructor
+
+### `Game(el)`
+__`el`__: This is the `HTMLElement` container you provide the app to live in.
+
+You should call all setup and initialization logic in the `init()` method of your custom class that extends `Game3`.
+
+    var App = Game3.Game.extend({
+      init: function(el) {
+        // setup logic
+      }
+    });
+
+
 ### Members
 
 ### `.camera {THREE.PerspectiveCamera}`
@@ -233,6 +247,7 @@ The scene object tracks all the objects in the app's world. In general, you shou
 ### `.width {number}`
 The width of the canvas.
 
+
 ### Instance Methods
 
 ### `.timerfired()`
@@ -243,15 +258,65 @@ __Note:__ Later on we may decided to pass `timerfired()` the time difference `dt
 __Note:__ `Game3` correctly uses the `requestAnimationFrame()` shim.
 
 
-
 ## Game3.Model
-Coming soon.
+The `Model` class represents objects in the scene, tracks their state, and handles events for them. If you are familiar with an MVC architecture, this class handles both the model and view logic.
+
+__Note:__ Later on we may try and split the model and view logic. For now we try to stay light weight.
+
+
+### Constructor
+
+### `Model(game)`
+
+__`game`__: An instance of your `Game3.Game` app. Many times the view logic needs to execute high level operations on the application. For this reason we think it's justified to have a public reference to the game.
+
+The model constructor does nothing by default. You must pass a reference to the game to the constructor. The reference is saved in the `before_init()` method.
+
+    var Ball = Game3.Model.extend({
+      init: function(game, radius) {
+        // set up geometry
+        var grey = new THREE.MeshLambertMaterial({color: 0xCCCCCC});
+        this.ball = new THREE.Mesh(new THREE.SphereGeometry(radius), grey);
+        // set object
+        this.setMesh(this.ball);
+      }
+    });
+
+
+### Members
+
+### `.game {Game3.Game}`
+A reference to your app.
+
+### `.interactive {Boolean}`
+Whether or not to send this model events. This is `false` by default. Making too many objects in the scene interactive can slow down your application.
+
+__Note:__ Do not modify this flag directly.
+
+
+### Instance Methods
+
+### `.getMesh() {THREE.Mesh}`
+Get the mesh represented by this model.
+
+### `.setMesh(mesh)`
+Set the mesh that this model represents. You must call this function to add your 3D object to the scene, receive events, etc. By convention, you would call `setMesh()` at the end of your `init()` method.
+
+
+### `.show([interactive])`
+__`interactive`__: A `Boolean` flag that determines whether or not to send your model events.
+
+This method adds your model to the scene. If you do not call `show()` after you instantiate the model, nothing will be drawn on the canvas. We do not call `show()` by default because many times you will not want to draw every model you have set up in the `Game3.Game` constructor.
+
+### `.hide()`
+Unimplemented. Coming soon.
+
     </article>
     <script type="text/javascript">
       var articles = document.getElementsByTagName('article');
       for (var i = 0; i < articles.length; i++) {
         var article = articles[i];
-        article.innerHTML = markdown.toHTML(article.innerHTML);
+        article.innerHTML = markdown.toHTML(article.innerHTML.trim());
       }
     </script>
   </div>
