@@ -21,6 +21,15 @@
     <p class="important">Under development.</p>
     <p>For now, be sure to check out the full example pages and the source code on <a href="https://github.com/abhandaru/Game3">GitHub</a>. The code itself is well formed, commented, and split into files.</p>
     <article>
+## Game3
+This is the standard namespace for the `Game3` library. When you load this library on your webpage, the `Game3` object should be visible in the default scope as `window.Game3`.
+
+### Members
+
+### `.webgl {Boolean}`
+Whether or not the client's browser has WebGL enabled. This may be useful for turning on/off certain optimizations.
+
+
 ## Game3.Class
 
 All classes in `Game3` derive from the base `Class`. It supports a familiar inheritance model, and should prove useful in your object oriented designs.
@@ -302,7 +311,6 @@ Get the mesh represented by this model.
 ### `.setMesh(mesh)`
 Set the mesh that this model represents. You must call this function to add your 3D object to the scene, receive events, etc. By convention, you would call `setMesh()` at the end of your `init()` method.
 
-
 ### `.show([interactive])`
 __`interactive`__: A `Boolean` flag that determines whether or not to send your model events.
 
@@ -313,6 +321,7 @@ Unimplemented. Coming soon.
 
     </article>
     <script type="text/javascript">
+      // hydrate all articles
       var articles = document.getElementsByTagName('article');
       for (var i = 0; i < articles.length; i++) {
         var article = articles[i];
