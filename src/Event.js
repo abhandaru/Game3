@@ -22,7 +22,7 @@ Game3.Event = Game3.Class.extend({
   },
 
   // computed properties
-  wheelDelta: function() {
+  scrollDelta: function() {
     var isWheel = this.native.wheelDeltaX !== undefined;
     var delta = new THREE.Vector2(this.native.wheelDeltaX, this.native.wheelDeltaY);
     return (isWheel && delta) || null;

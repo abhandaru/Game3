@@ -9,7 +9,7 @@ var Game = Game3.Game.extend({
   },
 
   scroll: function(event) {
-    console.log(event.wheelDelta());
+    this.camera.translateZ(event.scrollDelta().y);
   }
 });
 
