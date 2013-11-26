@@ -51,8 +51,8 @@ Game3.Events = Game3.Class.extend({
     return function(event) {
       var coords = new THREE.Vector2(event.layerX, event.layerY);
       var eventG3 = new Game3.Event({
-        delta2D:  coords.clone().sub(_this.lastMousePosition),
-        point2D:  coords
+        delta2D: coords.clone().sub(_this.lastMousePosition),
+        point2D: coords
       });
 
       // see if we hit anything in the scene
@@ -71,7 +71,7 @@ Game3.Events = Game3.Class.extend({
         eventG3.set({ model: _this.game });
       }
 
-      // run the handler
+      // run the corresponding handler
       var ret = handler.apply(_this, [eventG3]);
 
       // clean up
@@ -80,6 +80,14 @@ Game3.Events = Game3.Class.extend({
       event.preventDefault();
       return ret;
     };
+  },
+
+
+  resolveEvent: function(model, handler, event) {
+    if (this.sendEvent(model, handler, event))
+      return true;
+    // otherwise, send to game
+    return this.sendEvent(this.game, handler, event);
   },
 
 
@@ -100,60 +108,62 @@ Game3.Events = Game3.Class.extend({
 
   click: function(event) {
     this.lastClick = event.model;
-    var handler = event.model.click;
-    this.sendEvent(event.model, handler, event);
+    return this.resolveEvent(event.model, 'click', event);
   },
 
 
   mousedown: function(event) {
     this.lastClick = event.model;
     this.isMouseDown = true;
-    var handler = event.model.mousedown;
-    this.sendEvent(event.model, handler, event);
-    // run drop handler
-    if (this.lastDrag) {
-      this.sendEvent(this.lastDrag, this.lastDrag.mousedrop, event);
-      this.lastDrag = null;
-    }
+    return this.resolveEvent(event.model, 'mousedown', event);
   },
 
 
   mouseup: function(event) {
     this.isMouseDown = false;
-    var handler = event.model.mouseup;
-    this.sendEvent(event.model, handler, event);
+    var ret = this.resolveEvent(event.model, 'mouseup', event);
+    // run drop handler
+    if (this.lastDrag) {
+      this.resolveEvent(this.lastDrag, 'mousedrop', event);
+      this.lastDrag = null;
+    }
+    // clean up
+    return ret;
   },
 
 
   mousemove: function(event) {
     var target = event.model;
-    var handler = target.mousemove;
-    this.sendEvent(target, handler, event);
+    var ret = this.resolveEvent(target, 'mousemove', event);
     // check for change of focus (hover)
     if (this.lastOver !== target) {
-      this.sendEvent(target, target.mouseover, event);
+      this.resolveEvent(target, 'mouseover', event);
     }
     // check for drags
     if (this.isMouseDown && this.lastClick === target) {
       this.lastDrag = target;
-      this.sendEvent(target, target.mousedrag, event);
+      this.resolveEvent(target, 'mousedrag', event);
     } else if (this.isMouseDown && this.lastDrag) {
-      this.sendEvent(this.lastDrag, this.lastDrag.mousedrag, event);
+      this.resolveEvent(this.lastDrag, 'mousedrag', event);
     }
+    // clean up
+    return ret;
   },
 
 
   checkFocus: function(current, coords) {
     var focus = this.lastOver;
+    var ret = false;
     if (focus && (!current || focus !== current)) {
       var event = new Game3.Event({
         point2D: coords.clone(),
         model: focus
       })
-      this.sendEvent(focus, focus.mouseout, event);
+      ret = this.resolveEvent(focus, 'mouseout', event);
     }
     // update the focus
     this.lastOver = current;
+    return ret;
   },
 
 
@@ -165,9 +175,9 @@ Game3.Events = Game3.Class.extend({
    * @param {Game3.Event} event The event to send.
    */
   sendEvent: function(model, handler, event) {
-    if (model && handler && typeof handler == 'function') {
-      handler.apply(model, [event]);
-      return true;
+    var handlerFn = model[handler];
+    if (model && handlerFn && typeof handlerFn == 'function') {
+      return handlerFn.apply(model, [event]) !== false;
     }
     return false;
   }

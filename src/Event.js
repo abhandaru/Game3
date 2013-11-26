@@ -10,7 +10,7 @@ Game3.Event = Game3.Class.extend({
 
   set: function(params) {
     params        = params || { };
-    this.distance = params.distance || this.distance || -1;
+    this.distance = params.distance || this.distance || null;
     this.delta2D  = params.delta2D  || this.delta2D  || new THREE.Vector2(0, 0);
     this.point2D  = params.point2D  || this.point2D  || new THREE.Vector2(0, 0);
     this.point3D  = params.point3D  || this.point3D  || new THREE.Vector3(0, 0, 0);
