@@ -9,14 +9,22 @@ Game3.Event = Game3.Class.extend({
   },
 
   set: function(params) {
-    params        = params || { };
-    this.distance = params.distance || this.distance || null;
-    this.delta2D  = params.delta2D  || this.delta2D  || new THREE.Vector2(0, 0);
-    this.point2D  = params.point2D  || this.point2D  || new THREE.Vector2(0, 0);
-    this.point3D  = params.point3D  || this.point3D  || new THREE.Vector3(0, 0, 0);
-    this.face     = params.face     || this.face     || null;
-    this.mesh     = params.mesh     || this.mesh     || null;
-    this.model    = params.model    || this.model    || null;
-  }
+    params            = params || { };
+    this.model        = params.model    || this.model    || null;
+    this.native       = params.native   || this.native   || null;
+    // for clicking
+    this.distance     = params.distance || this.distance || null;
+    this.delta2D      = params.delta2D  || this.delta2D  || null;
+    this.point2D      = params.point2D  || this.point2D  || null;
+    this.point3D      = params.point3D  || this.point3D  || null;
+    this.face         = params.face     || this.face     || null;
+    this.mesh         = params.mesh     || this.mesh     || null;
+  },
 
+  // computed properties
+  wheelDelta: function() {
+    var isWheel = this.native.wheelDeltaX !== undefined;
+    var delta = new THREE.Vector2(this.native.wheelDeltaX, this.native.wheelDeltaY);
+    return (isWheel && delta) || null;
+  }
 });

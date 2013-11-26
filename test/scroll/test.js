@@ -8,8 +8,8 @@ var Game = Game3.Game.extend({
     this.ball.show(true);
   },
 
-  click: function(event) {
-    console.log(event);
+  scroll: function(event) {
+    console.log(event.wheelDelta());
   }
 });
 
