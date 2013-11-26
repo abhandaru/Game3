@@ -36,27 +36,27 @@ Game3.Events = Game3.Class.extend({
    * @param {HTMLElement} container The container to bind to.
    */
   bind: function(container) {
-    var that = this;
+    var _this = this;
     var types = ['click', 'mousedown', 'mouseup', 'mousemove'];
     // bind for all these events
     types.forEach(function(type) {
-      var handler = that.wrapper(that[type]);
+      var handler = _this.wrapper(_this[type]);
       container.addEventListener(type, handler);
     });
   },
 
 
   wrapper: function(handler) {
-    var that = this;
+    var _this = this;
     return function(event) {
       var coords = new THREE.Vector2(event.layerX, event.layerY);
       var eventG3 = new Game3.Event({
-        delta2D:  coords.clone().sub(that.lastMousePosition),
+        delta2D:  coords.clone().sub(_this.lastMousePosition),
         point2D:  coords
       });
 
       // see if we hit anything in the scene
-      var targets = that.getTargets(coords.x, coords.y);
+      var targets = _this.getTargets(coords.x, coords.y);
       if (targets.length) {
         var target = targets[0];
         // add the extra event data
@@ -68,15 +68,15 @@ Game3.Events = Game3.Class.extend({
           model: target.object.Game3Model
         });
       } else {
-        eventG3.set({ model: that.game });
+        eventG3.set({ model: _this.game });
       }
 
       // run the handler
-      var ret = handler.apply(that, [eventG3]);
+      var ret = handler.apply(_this, [eventG3]);
 
       // clean up
-      that.checkFocus(eventG3.model, coords);
-      that.lastMousePosition.set(coords.x, coords.y);
+      _this.checkFocus(eventG3.model, coords);
+      _this.lastMousePosition.set(coords.x, coords.y);
       event.preventDefault();
       return ret;
     };

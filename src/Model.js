@@ -14,6 +14,7 @@ Game3.Model = Game3.Class.extend({
     this.interactive = false;
   },
 
+
   /**
    * Override this method to create a custom object
    * @param {Game3.Game} game Reference to game class, for message passing.
