@@ -21,7 +21,7 @@ FILES=(
 OUT_DIR="build"
 OUTPUT="game3"
 OUTPUT_HEADER="// Game3 - http://abhandaru.github.io/Game3/\n// (c)2013 Adu Bhandaru\n"
-MINIFIER="uglifyjs"
+MINIFIER="uglifyjs --mangle"
 
 # build the command
 command="cat "
