@@ -31,7 +31,7 @@ var Cube = Game3.Model.extend({
     var grey = new THREE.MeshLambertMaterial({color: 0xCCCCCC});
     this.cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), grey);
     // set object
-    this.setMesh(this.cube);
+    this.mesh(this.cube);
   },
   timerfired: function() {
     this.cube.rotation.x += 0.01;
@@ -89,6 +89,8 @@ var Cube = Game3.Model.extend({
 <li>
 <tt>Game3.Event</tt> - Directly sent to your model/view, with rich metadata.</li>
 <li>
+<tt>Game3.Collision</tt> - A collision event with rich metadata.</li>
+<li>
 <tt>Game3.Collisions</tt> - Send your model/view collision events.</li>
 <li>
 <tt>this._super</tt> - Easy override and extension.</li>
@@ -132,7 +134,7 @@ var Cube = Game3.Model.extend({
     this.cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), grey);
 
     // set object
-    this.setMesh(this.cube);
+    this.mesh(this.cube);
   },
 
   timerfired: function() {

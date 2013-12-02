@@ -178,17 +178,6 @@ This is the standard class for event objects sent to handlers in a `Game3.Model`
 
 __Note:__ Right now, `Game3` only handles mouse events. These are the harder kind to handle, since identifying objects in the 3D scene with respect to 2D click coordinates requires ray tracing. Capturing keypresses is simple! _We are currently figuring out what kind of behavior we want from key events._
 
-The following event handlers are currently supported:
-
-- `click()`
-- `mousemove()`
-- `mousdown()`
-- `mouseup()`
-- `mouseover()`
-- `mouseout()`
-- `mousedrag()`
-- `mousedrop()`
-
 
 ### Members
 
@@ -277,7 +266,7 @@ __Note:__ Later on we may try and split the model and view logic. For now we try
 
 ### `Model(game)`
 
-__`game`__: An instance of your `Game3.Game` app. Many times the view logic needs to execute high level operations on the application. For this reason we think it's justified to have a public reference to the game.
+__`game {Game3.Game}`__: A reference to your app. Many times the view logic needs to execute high level operations on the application. For this reason we think it's justified to have a public reference to the game.
 
 The model constructor does nothing by default. You must pass a reference to the game to the constructor. The reference is saved in the `before_init()` method.
 
@@ -305,19 +294,47 @@ __Note:__ Do not modify this flag directly.
 
 ### Instance Methods
 
-### `.getMesh() {THREE.Mesh}`
-Get the mesh represented by this model.
+### `.handler(event) {Boolean?}`
+__`event {Game3.Event}`__: A event object passed to your handler. It contains useful metadata. For more information, see the `Game3.Event` section. Using event handlers for a `Model` is simple. Just define a handler function with the appropriate name:
 
-### `.setMesh(mesh)`
-Set the mesh that this model represents. You must call this function to add your 3D object to the scene, receive events, etc. By convention, you would call `setMesh()` at the end of your `init()` method.
+    click: function(event) {
+      // your event logic here
+      console.log(event);
+    }
 
-### `.show([interactive])`
-__`interactive`__: A `Boolean` flag that determines whether or not to send your model events.
+`Game3` will automatically call the handler when your model receives the event. Remeber, to recieve events, you must make your model `interactive`.
 
-This method adds your model to the scene. If you do not call `show()` after you instantiate the model, nothing will be drawn on the canvas. We do not call `show()` by default because many times you will not want to draw every model you have set up in the `Game3.Game` constructor.
+The following event handlers are currently supported:
+
+- `click`
+- `rightclick`
+- `mouseover`
+- `mouseout`
+- `mousedrag`
+- `mousedrop`
+- `mousedown`
+- `mouseup`
+- `mousemove`
+- `scroll`
+
 
 ### `.hide()`
 Unimplemented. Coming soon.
+
+### `.hitbox(hitbox)`
+__`hitbox {THREE.Mesh?}`__: This argument is optional. If `hitbox` is provided, the hitbox for this model will be replaced. Otherwise, the `.hitbox()` returns the current hitbox.
+
+Many times the visible geometry (rendered in the scene) is not the _interactive_ geometry you want to use. That is, the event handling framework will use the hitbox geometry if you provide one. If no `hitbox` is set, we will use the `mesh`.
+
+### `.mesh(mesh)`
+__`mesh {THREE.Mesh?}`__: This argument is optional. If `mesh` is provided, the mesh for this model will be replaced. Otherwise, the `.mesh()` returns the current mesh.
+
+__Note:__ By convention, you would call `mesh()` at the end of your `init()` method.
+
+### `.show([interactive])`
+__`interactive {Boolean}`__: A flag that determines whether or not to send your model events.
+
+This method adds your model to the scene. If you do not call `show()` after you instantiate the model, nothing will be drawn on the canvas. We do not call `show()` by default because many times you will not want to draw every model you have set up in the `Game3.Game` constructor.
 
     </article>
     <script type="text/javascript">
