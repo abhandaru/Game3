@@ -77,7 +77,7 @@ Game3.Game = Game3.Class.extend({
    * @param {THREE.Object} hitbox The hitbox to use for event handling.
    */
   addDynamic: function(object, hitbox) {
-    if (hitbox === undefined)
+    if (!hitbox)
       hitbox = object;
     this.events.track(hitbox);
     this.scene.add(object);

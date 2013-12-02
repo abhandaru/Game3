@@ -404,7 +404,7 @@ Game3.Model = Game3.Class.extend({
     this.interactive = interactive;
     // render in the scene
     if (interactive)
-      this.game.addDynamic(this._mesh, this._hitbox);
+      this.game.addDynamic(this._mesh, this._hitbox || this._mesh);
     else
       this.game.addStatic(this._mesh);
   },
@@ -779,7 +779,7 @@ Game3.Game = Game3.Class.extend({
    * @param {THREE.Object} hitbox The hitbox to use for event handling.
    */
   addDynamic: function(object, hitbox) {
-    if (hitbox === undefined)
+    if (!hitbox)
       hitbox = object;
     this.events.track(hitbox);
     this.scene.add(object);

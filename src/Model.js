@@ -63,7 +63,7 @@ Game3.Model = Game3.Class.extend({
     this.interactive = interactive;
     // render in the scene
     if (interactive)
-      this.game.addDynamic(this._mesh, this._hitbox);
+      this.game.addDynamic(this._mesh, this._hitbox || this._mesh);
     else
       this.game.addStatic(this._mesh);
   },
