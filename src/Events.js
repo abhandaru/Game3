@@ -97,7 +97,7 @@ Game3.Events = Game3.Class.extend({
       // clean up
       _this.checkFocus(eventG3.model, coords);
       _this.lastMousePosition.set(coords.x, coords.y);
-      event.preventDefault();
+      if (ret) event.preventDefault();
       return ret;
     };
   },

@@ -10,11 +10,11 @@ var Game = Game3.Game.extend({
   },
 
   click: function(event) {
-    console.log('click');
+    console.log('left');
   },
 
   rightclick: function(event) {
-    console.log('right click');
+    console.log('right');
   }
 
 });
@@ -34,5 +34,10 @@ var Cube = Game3.Model.extend({
     var dy = event.delta2D.y;
     this.cube.position.x += 2*dx;
     this.cube.position.z += 2*dy;
+  },
+
+  rightclick: function(event) {
+    console.log('right cube');
+    return false;
   }
 });
