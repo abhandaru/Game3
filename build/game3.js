@@ -566,7 +566,7 @@ Game3.Events = Game3.Class.extend({
       // clean up
       _this.checkFocus(eventG3.model, coords);
       _this.lastMousePosition.set(coords.x, coords.y);
-      event.preventDefault();
+      if (ret) event.preventDefault();
       return ret;
     };
   },
@@ -707,8 +707,10 @@ Game3.Game = Game3.Class.extend({
     var width = el.offsetWidth;
     var height = el.offsetHeight;
 
+    // settings
+    this.bindResize = true;
+
     // save some useful information
-    this.resize = true;
     this.width = width;
     this.height = height;
 
@@ -719,7 +721,7 @@ Game3.Game = Game3.Class.extend({
     this.canvas = this.renderer.domElement;
     this.el.appendChild(this.canvas);
 
-    // delegate tasks
+    // set up events
     this.events = new Game3.Events(this);
   },
 
@@ -739,6 +741,14 @@ Game3.Game = Game3.Class.extend({
    * @param {HTMLElement} A container for your application.
    */
   after_init: function(el) {
+    var _this = this;
+
+    // bind resize event
+    if (this.bindResize) {
+      window.addEventListener('resize', function() { return _this.resize(); });
+    }
+
+    // bind render loop to timer
     Game3.renderLoop(this, this.render);
   },
 
@@ -773,6 +783,15 @@ Game3.Game = Game3.Class.extend({
   },
 
 
+  resize: function() {
+    var width = this.width = this.el.offsetWidth;
+    var height = this.height = this.el.offsetHeight;
+    this.renderer.setSize(width, height);
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+  },
+
+
   /**
    * Call any logic that would change your game state every timestep.
    * For example, animations may require you to update an object's position.
@@ -789,7 +808,5 @@ Game3.Game = Game3.Class.extend({
     this.timerfired(dt);
     this.renderer.render(this.scene, this.camera);
   }
-
-
 
 });
