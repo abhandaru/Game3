@@ -187,12 +187,6 @@ The distance from the camera (your viewport) to the object you clicked on. If th
 ### `.delta2D {THREE.Vector2}`
 The change in `x` and `y` since the last mouse event. Useful for dragging without clicking and anything else you can think of!
 
-### `.point2D {THREE.Vector2}`
-The point on the canvas you clicked on. This is with respect to the `canvas` element, not to the `document` dimensions or the window.
-
-### `.point3D {THREE.Vector3?}`
-The point in the 3D scene that you clicked on. If you did not click on anything in the scene, this value may be `null`.
-
 ### `.face {THREE.Face?}`
 The particular face of the object you clicked on (if any). If you did not click on an object in the scene, this value will be `null`.
 
@@ -201,6 +195,21 @@ A reference to the mesh that was sent a mouse event. If no object in the scene r
 
 ### `.model {Game3.Model?}`
 A reference to the model that recieved the mouse event. Again, if no object in the scene was clicked, this attribute will be `null`. Note: This is usually the same model that we are invoking the event handler for.
+
+### `.native {Event}`
+A reference to the native event object that triggered this interaction. You may find more useful metadata here.
+
+### `.point2D {THREE.Vector2}`
+The point on the canvas you clicked on. This is with respect to the `canvas` element, not to the `document` dimensions or the window.
+
+### `.point3D {THREE.Vector3?}`
+The point in the 3D scene that you clicked on. If you did not click on anything in the scene, this value may be `null`.
+
+
+### Instance Methods
+
+### `.scrollDelta() {THREE.Vector2?}`
+If this was a scroll event, get the scroll deltas (both `x` and `y`). If this was not a scroll event, `scrollDelta()` returns `null`.
 
 
 ## Game3.Game
@@ -295,7 +304,11 @@ __Note:__ Do not modify this flag directly.
 ### Instance Methods
 
 ### `.handler(event) {Boolean?}`
-__`event {Game3.Event}`__: A event object passed to your handler. It contains useful metadata. For more information, see the `Game3.Event` section. Using event handlers for a `Model` is simple. Just define a handler function with the appropriate name:
+__`event {Game3.Event}`__: A event object passed to your handler. It contains useful metadata. For more information, see the `Game3.Event` section.
+
+__`@return {Boolean?}`__: Whether or not this handler __handles__ the event. By convention, a value of `undefined` is considered to be `true`.
+
+Using event handlers for a `Model` is simple. Just define a handler function with the appropriate name:
 
     click: function(event) {
       // your event logic here
@@ -303,6 +316,8 @@ __`event {Game3.Event}`__: A event object passed to your handler. It contains us
     }
 
 `Game3` will automatically call the handler when your model receives the event. Remeber, to recieve events, you must make your model `interactive`.
+
+__Event bubbling:__ If `(handler() === false)`, we say that this handler does not _handle_ the event. Therefore, the event should __bubble__ to the `Game` class. If no handler _handles_ the event, the default action will be taken. That is, the events framework will __not__ call `preventDefault()` on the native event.
 
 The following event handlers are currently supported:
 
