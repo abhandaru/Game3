@@ -71,9 +71,13 @@ Game3.createCamera = function(options) {
  * @param {Function} renderFn Animation function.
  */
 Game3.renderLoop = function(caller, renderFn) {
+  var lastUpdate = Date.now();
   var render = function() {
     window.requestAnimationFrame(render);
-    renderFn.apply(caller);
+    // call the passed trigger
+    var dt = Date.now() - lastUpdate;
+    lastUpdate = Date.now();
+    renderFn.apply(caller, [dt]);
   };
   render();
 };
@@ -351,6 +355,7 @@ Game3.Model = Game3.Class.extend({
     this.interactive = false;
   },
 
+
   /**
    * Override this method to create a custom object
    * @param {Game3.Game} game Reference to game class, for message passing.
@@ -443,20 +448,41 @@ Game3.Event = Game3.Class.extend({
   },
 
   set: function(params) {
-    params        = params || { };
-    this.distance = params.distance || this.distance || -1;
-    this.delta2D  = params.delta2D  || this.delta2D  || new THREE.Vector2(0, 0);
-    this.point2D  = params.point2D  || this.point2D  || new THREE.Vector2(0, 0);
-    this.point3D  = params.point3D  || this.point3D  || new THREE.Vector3(0, 0, 0);
-    this.face     = params.face     || this.face     || null;
-    this.mesh     = params.mesh     || this.mesh     || null;
-    this.model    = params.model    || this.model    || null;
-  }
+    params            = params || { };
+    this.model        = params.model    || this.model    || null;
+    this.native       = params.native   || this.native   || null;
+    // for clicking
+    this.distance     = params.distance || this.distance || null;
+    this.delta2D      = params.delta2D  || this.delta2D  || null;
+    this.point2D      = params.point2D  || this.point2D  || null;
+    this.point3D      = params.point3D  || this.point3D  || null;
+    this.face         = params.face     || this.face     || null;
+    this.mesh         = params.mesh     || this.mesh     || null;
+  },
 
+  // computed properties
+  scrollDelta: function() {
+    var isWheel = this.native.wheelDeltaX !== undefined;
+    var delta = new THREE.Vector2(this.native.wheelDeltaX, this.native.wheelDeltaY);
+    return (isWheel && delta) || null;
+  }
 });
 // @copyright 2013
 // @author Adu Bhandaru
 // Logic for sending messages to objects.
+
+// constants
+Game3.EVENTS_LEFT_CLICK = 'click';
+Game3.EVENTS_RIGHT_CLICK = 'rightclick';
+Game3.EVENTS_MOUSEMOVE = 'mousemove';
+Game3.EVENTS_MOUSEDOWN = 'mousedown';
+Game3.EVENTS_MOUSEUP = 'mouseup';
+Game3.EVENTS_MOUSEOVER = 'mouseover';
+Game3.EVENTS_MOUSEOUT = 'mouseout';
+Game3.EVENTS_MOUSEDRAG = 'mousedrag';
+Game3.EVENTS_MOUSEDROP = 'mousedrop';
+Game3.EVENTS_MOUSESCROLL = 'scroll';
+
 
 Game3.Events = Game3.Class.extend({
 
@@ -492,27 +518,34 @@ Game3.Events = Game3.Class.extend({
    * @param {HTMLElement} container The container to bind to.
    */
   bind: function(container) {
-    var that = this;
-    var types = ['click', 'mousedown', 'mouseup', 'mousemove'];
+    var _this = this;
+    var types = [
+        'click',
+        'mousedown',
+        'mouseup',
+        'mousemove',
+        'wheel',
+        'contextmenu'];
     // bind for all these events
     types.forEach(function(type) {
-      var handler = that.wrapper(that[type]);
+      var handler = _this.wrapper(_this[type]);
       container.addEventListener(type, handler);
     });
   },
 
 
   wrapper: function(handler) {
-    var that = this;
+    var _this = this;
     return function(event) {
       var coords = new THREE.Vector2(event.layerX, event.layerY);
       var eventG3 = new Game3.Event({
-        delta2D:  coords.clone().sub(that.lastMousePosition),
-        point2D:  coords
+        native: event,
+        delta2D: coords.clone().sub(_this.lastMousePosition),
+        point2D: coords
       });
 
       // see if we hit anything in the scene
-      var targets = that.getTargets(coords.x, coords.y);
+      var targets = _this.getTargets(coords.x, coords.y);
       if (targets.length) {
         var target = targets[0];
         // add the extra event data
@@ -524,20 +557,85 @@ Game3.Events = Game3.Class.extend({
           model: target.object.Game3Model
         });
       } else {
-        eventG3.set({ model: that.game });
+        eventG3.set({ model: _this.game });
       }
 
-      // run the handler
-      var ret = handler.apply(that, [eventG3]);
+      // run the corresponding handler
+      var ret = handler.apply(_this, [eventG3]);
 
       // clean up
-      that.checkFocus(eventG3.model, coords);
-      that.lastMousePosition.set(coords.x, coords.y);
+      _this.checkFocus(eventG3.model, coords);
+      _this.lastMousePosition.set(coords.x, coords.y);
       event.preventDefault();
       return ret;
     };
   },
 
+
+  //
+  // Specific event handlers
+  //
+
+  click: function(event) {
+    this.lastClick = event.model;
+    return this.resolveEvent(event.model, Game3.EVENTS_LEFT_CLICK, event);
+  },
+
+
+  mousedown: function(event) {
+    this.lastClick = event.model;
+    this.isMouseDown = true;
+    return this.resolveEvent(event.model, Game3.EVENTS_MOUSEDOWN, event);
+  },
+
+
+  mouseup: function(event) {
+    this.isMouseDown = false;
+    var ret = this.resolveEvent(event.model, Game3.EVENTS_MOUSEUP, event);
+    // run drop handler
+    if (this.lastDrag) {
+      this.resolveEvent(this.lastDrag, Game3.EVENTS_MOUSEDROP, event);
+      this.lastDrag = null;
+    }
+    // clean up
+    return ret;
+  },
+
+
+  mousemove: function(event) {
+    var target = event.model;
+    var ret = this.resolveEvent(target, Game3.EVENTS_MOUSEMOVE, event);
+    // check for change of focus (hover)
+    if (this.lastOver !== target) {
+      this.resolveEvent(target, Game3.EVENTS_MOUSEOVER, event);
+    }
+    // check for drags
+    if (this.isMouseDown && this.lastClick === target) {
+      this.lastDrag = target;
+      this.resolveEvent(target, Game3.EVENTS_MOUSEDRAG, event);
+    } else if (this.isMouseDown && this.lastDrag) {
+      this.resolveEvent(this.lastDrag, Game3.EVENTS_MOUSEDRAG, event);
+    }
+    // clean up
+    return ret;
+  },
+
+
+  wheel: function(event) {
+    var target = event.model;
+    return this.resolveEvent(target, Game3.EVENTS_MOUSESCROLL, event);
+  },
+
+
+  contextmenu: function(event) {
+    var target = event.model;
+    return this.resolveEvent(target, Game3.EVENTS_RIGHT_CLICK, event);
+  },
+
+
+  //
+  // Helper functions
+  //
 
   getTargets: function(x, y) {
     var camera = this.game.camera;
@@ -553,63 +651,27 @@ Game3.Events = Game3.Class.extend({
     return intersects;
   },
 
-
-  click: function(event) {
-    this.lastClick = event.model;
-    var handler = event.model.click;
-    this.sendEvent(event.model, handler, event);
-  },
-
-
-  mousedown: function(event) {
-    this.lastClick = event.model;
-    this.isMouseDown = true;
-    var handler = event.model.mousedown;
-    this.sendEvent(event.model, handler, event);
-    // run drop handler
-    if (this.lastDrag) {
-      this.sendEvent(this.lastDrag, this.lastDrag.mousedrop, event);
-      this.lastDrag = null;
-    }
-  },
-
-
-  mouseup: function(event) {
-    this.isMouseDown = false;
-    var handler = event.model.mouseup;
-    this.sendEvent(event.model, handler, event);
-  },
-
-
-  mousemove: function(event) {
-    var target = event.model;
-    var handler = target.mousemove;
-    this.sendEvent(target, handler, event);
-    // check for change of focus (hover)
-    if (this.lastOver !== target) {
-      this.sendEvent(target, target.mouseover, event);
-    }
-    // check for drags
-    if (this.isMouseDown && this.lastClick === target) {
-      this.lastDrag = target;
-      this.sendEvent(target, target.mousedrag, event);
-    } else if (this.isMouseDown && this.lastDrag) {
-      this.sendEvent(this.lastDrag, this.lastDrag.mousedrag, event);
-    }
-  },
-
-
   checkFocus: function(current, coords) {
     var focus = this.lastOver;
+    var ret = false;
     if (focus && (!current || focus !== current)) {
       var event = new Game3.Event({
         point2D: coords.clone(),
         model: focus
       })
-      this.sendEvent(focus, focus.mouseout, event);
+      ret = this.resolveEvent(focus, Game3.EVENTS_MOUSEOUT, event);
     }
     // update the focus
     this.lastOver = current;
+    return ret;
+  },
+
+
+  resolveEvent: function(model, handler, event) {
+    if (this.sendEvent(model, handler, event))
+      return true;
+    // otherwise, send to game
+    return this.sendEvent(this.game, handler, event);
   },
 
 
@@ -621,9 +683,9 @@ Game3.Events = Game3.Class.extend({
    * @param {Game3.Event} event The event to send.
    */
   sendEvent: function(model, handler, event) {
-    if (model && handler && typeof handler == 'function') {
-      handler.apply(model, [event]);
-      return true;
+    var handlerFn = model[handler];
+    if (model && handlerFn && typeof handlerFn == 'function') {
+      return handlerFn.apply(model, [event]) !== false;
     }
     return false;
   }
@@ -646,6 +708,7 @@ Game3.Game = Game3.Class.extend({
     var height = el.offsetHeight;
 
     // save some useful information
+    this.resize = true;
     this.width = width;
     this.height = height;
 
@@ -715,15 +778,15 @@ Game3.Game = Game3.Class.extend({
    * For example, animations may require you to update an object's position.
    * @return {void}
    */
-  timerfired: function() { },
+  timerfired: function(dt) { },
 
 
   /**
    * This gets called by the render loop.
    * @return {void}
    */
-  render: function() {
-    this.timerfired();
+  render: function(dt) {
+    this.timerfired(dt);
     this.renderer.render(this.scene, this.camera);
   }
 

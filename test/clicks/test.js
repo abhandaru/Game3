@@ -9,8 +9,12 @@ var Game = Game3.Game.extend({
     this.light.show();
   },
 
-  mousedrag: function() {
-    console.log('drag');
+  click: function(event) {
+    console.log('click');
+  },
+
+  rightclick: function(event) {
+    console.log('right click');
   }
 
 });

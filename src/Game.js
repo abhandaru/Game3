@@ -15,6 +15,7 @@ Game3.Game = Game3.Class.extend({
     var height = el.offsetHeight;
 
     // save some useful information
+    this.resize = true;
     this.width = width;
     this.height = height;
 
@@ -84,15 +85,15 @@ Game3.Game = Game3.Class.extend({
    * For example, animations may require you to update an object's position.
    * @return {void}
    */
-  timerfired: function() { },
+  timerfired: function(dt) { },
 
 
   /**
    * This gets called by the render loop.
    * @return {void}
    */
-  render: function() {
-    this.timerfired();
+  render: function(dt) {
+    this.timerfired(dt);
     this.renderer.render(this.scene, this.camera);
   }
 

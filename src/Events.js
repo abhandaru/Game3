@@ -3,7 +3,8 @@
 // Logic for sending messages to objects.
 
 // constants
-Game3.EVENTS_CLICK = 'click';
+Game3.EVENTS_LEFT_CLICK = 'click';
+Game3.EVENTS_RIGHT_CLICK = 'rightclick';
 Game3.EVENTS_MOUSEMOVE = 'mousemove';
 Game3.EVENTS_MOUSEDOWN = 'mousedown';
 Game3.EVENTS_MOUSEUP = 'mouseup';
@@ -49,7 +50,13 @@ Game3.Events = Game3.Class.extend({
    */
   bind: function(container) {
     var _this = this;
-    var types = ['click', 'mousedown', 'mouseup', 'mousemove', 'wheel'];
+    var types = [
+        'click',
+        'mousedown',
+        'mouseup',
+        'mousemove',
+        'wheel',
+        'contextmenu'];
     // bind for all these events
     types.forEach(function(type) {
       var handler = _this.wrapper(_this[type]);
@@ -102,7 +109,7 @@ Game3.Events = Game3.Class.extend({
 
   click: function(event) {
     this.lastClick = event.model;
-    return this.resolveEvent(event.model, Game3.EVENTS_CLICK, event);
+    return this.resolveEvent(event.model, Game3.EVENTS_LEFT_CLICK, event);
   },
 
 
@@ -146,11 +153,14 @@ Game3.Events = Game3.Class.extend({
 
 
   wheel: function(event) {
-    event.set({
-
-    });
     var target = event.model;
     return this.resolveEvent(target, Game3.EVENTS_MOUSESCROLL, event);
+  },
+
+
+  contextmenu: function(event) {
+    var target = event.model;
+    return this.resolveEvent(target, Game3.EVENTS_RIGHT_CLICK, event);
   },
 
 

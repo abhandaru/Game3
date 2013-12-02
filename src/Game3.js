@@ -68,9 +68,13 @@ Game3.createCamera = function(options) {
  * @param {Function} renderFn Animation function.
  */
 Game3.renderLoop = function(caller, renderFn) {
+  var lastUpdate = Date.now();
   var render = function() {
     window.requestAnimationFrame(render);
-    renderFn.apply(caller);
+    // call the passed trigger
+    var dt = Date.now() - lastUpdate;
+    lastUpdate = Date.now();
+    renderFn.apply(caller, [dt]);
   };
   render();
 };
