@@ -44,7 +44,7 @@ var Ball = Game3.Model.extend({
     this.ball.position = position;
     this.velocity = velocity;
     // set object
-    this.setMesh(this.ball);
+    this.mesh(this.ball);
   },
 
   timerfired: function() {

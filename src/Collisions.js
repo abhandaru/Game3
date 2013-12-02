@@ -56,8 +56,8 @@ Game3.Collisions = Game3.Class.extend({
       for (var j = i + 1; j < this.models.length; j++) {
         var modelA = this.models[i];
         var modelB = this.models[j];
-        var meshA = modelA.getMesh();
-        var meshB = modelB.getMesh();
+        var meshA = modelA.mesh();
+        var meshB = modelB.mesh();
         var collisionA = this.checkFn(meshA, meshB);
         var collisionB = this.checkFn(meshB, meshA);
         if (collisionA && collisionB) {

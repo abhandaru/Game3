@@ -3,16 +3,16 @@
 // Logic for sending messages to objects.
 
 // constants
-Game3.EVENTS_LEFT_CLICK = 'click';
-Game3.EVENTS_RIGHT_CLICK = 'rightclick';
-Game3.EVENTS_MOUSEMOVE = 'mousemove';
-Game3.EVENTS_MOUSEDOWN = 'mousedown';
-Game3.EVENTS_MOUSEUP = 'mouseup';
-Game3.EVENTS_MOUSEOVER = 'mouseover';
-Game3.EVENTS_MOUSEOUT = 'mouseout';
-Game3.EVENTS_MOUSEDRAG = 'mousedrag';
-Game3.EVENTS_MOUSEDROP = 'mousedrop';
-Game3.EVENTS_MOUSESCROLL = 'scroll';
+Game3.EVENTS_LEFT_CLICK    = 'click';
+Game3.EVENTS_RIGHT_CLICK   = 'rightclick';
+Game3.EVENTS_MOUSEMOVE     = 'mousemove';
+Game3.EVENTS_MOUSEDOWN     = 'mousedown';
+Game3.EVENTS_MOUSEUP       = 'mouseup';
+Game3.EVENTS_MOUSEOVER     = 'mouseover';
+Game3.EVENTS_MOUSEOUT      = 'mouseout';
+Game3.EVENTS_MOUSEDRAG     = 'mousedrag';
+Game3.EVENTS_MOUSEDROP     = 'mousedrop';
+Game3.EVENTS_MOUSESCROLL   = 'scroll';
 
 
 Game3.Events = Game3.Class.extend({

@@ -5,7 +5,7 @@ var Game = Game3.Game.extend({
 
     // set camera to the floor
     this.camera.position = new THREE.Vector3(0, 200, 0);
-    this.camera.lookAt(this.ball.mesh.position);
+    this.camera.lookAt(this.ball.mesh().position);
 
     // show objects
     this.light.show();
@@ -32,6 +32,6 @@ var Ball = Game3.Model.extend({
     var grey = new THREE.MeshLambertMaterial({color: 0xCCCCCC});
     this.ball = new THREE.Mesh(new THREE.CubeGeometry(100, 100, 100), grey);
     // set object
-    this.setMesh(this.ball);
+    this.mesh(this.ball);
   }
 });

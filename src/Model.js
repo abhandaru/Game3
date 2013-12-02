@@ -12,6 +12,8 @@ Game3.Model = Game3.Class.extend({
   before_init: function(game) {
     this.game = game;
     this.interactive = false;
+    this._mesh = null;
+    this._hitbox = null;
   },
 
 
@@ -23,23 +25,30 @@ Game3.Model = Game3.Class.extend({
 
 
   /**
-   * Protected interface for setting the mesh for this model.
-   * @param {THREE.Object3D} mesh The mesh for this model.
+   * Protected interface for getting or setting the mesh for this model.
+   * @param {THREE.Object3D?} mesh The mesh for this model.
    */
-  setMesh: function(mesh) {
-    this.mesh = mesh;
-    this.mesh.Game3Model = this;
+  mesh: function(mesh) {
+    if (mesh === undefined)
+      return this._mesh;
+    // set the mesh
+    this._mesh = mesh;
+    this._mesh.Game3Model = this;
   },
 
 
   /**
-   * Public interface for getting the mesh for this model.
-   * TODO: This might change to return a THREE.Object3D
-   * @return {THREE.Mesh} The mesh associated with this model.
+   * Protected interface for getting or setting the hitbox for this model.
+   * @param {THREE.Object3D?} mesh The hitbox for this model.
    */
-  getMesh: function() {
-    return this.mesh;
+  hitbox: function(hitbox) {
+    if (hitbox === undefined)
+      return this._hitbox;
+    // set the mesh
+    this._hitbox = hitbox;
+    this._hitbox.Game3Model = this;
   },
+
 
   /**
    * Render the object in the scence.
@@ -54,9 +63,9 @@ Game3.Model = Game3.Class.extend({
     this.interactive = interactive;
     // render in the scene
     if (interactive)
-      this.game.addDynamic(this.mesh);
+      this.game.addDynamic(this._mesh, this._hitbox);
     else
-      this.game.addStatic(this.mesh);
+      this.game.addStatic(this._mesh);
   },
 
 

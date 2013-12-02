@@ -22,7 +22,7 @@ var Cube = Game3.Model.extend({
     this.cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), grey);
 
     // set object
-    this.setMesh(this.cube);
+    this.mesh(this.cube);
   },
 
   timerfired: function() {

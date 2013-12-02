@@ -74,9 +74,12 @@ Game3.Game = Game3.Class.extend({
    * Interface for adding an interactive object to the scene. These objects
    * will be sent mouse events.
    * @param {THREE.Object} object The object to add to the scene.
+   * @param {THREE.Object} hitbox The hitbox to use for event handling.
    */
-  addDynamic: function(object) {
-    this.events.track(object);
+  addDynamic: function(object, hitbox) {
+    if (hitbox === undefined)
+      hitbox = object;
+    this.events.track(hitbox);
     this.scene.add(object);
   },
 

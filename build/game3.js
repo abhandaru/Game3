@@ -246,8 +246,8 @@ Game3.Collisions = Game3.Class.extend({
       for (var j = i + 1; j < this.models.length; j++) {
         var modelA = this.models[i];
         var modelB = this.models[j];
-        var meshA = modelA.getMesh();
-        var meshB = modelB.getMesh();
+        var meshA = modelA.mesh();
+        var meshB = modelB.mesh();
         var collisionA = this.checkFn(meshA, meshB);
         var collisionB = this.checkFn(meshB, meshA);
         if (collisionA && collisionB) {
@@ -353,6 +353,8 @@ Game3.Model = Game3.Class.extend({
   before_init: function(game) {
     this.game = game;
     this.interactive = false;
+    this._mesh = null;
+    this._hitbox = null;
   },
 
 
@@ -364,23 +366,30 @@ Game3.Model = Game3.Class.extend({
 
 
   /**
-   * Protected interface for setting the mesh for this model.
-   * @param {THREE.Object3D} mesh The mesh for this model.
+   * Protected interface for getting or setting the mesh for this model.
+   * @param {THREE.Object3D?} mesh The mesh for this model.
    */
-  setMesh: function(mesh) {
-    this.mesh = mesh;
-    this.mesh.Game3Model = this;
+  mesh: function(mesh) {
+    if (mesh === undefined)
+      return this._mesh;
+    // set the mesh
+    this._mesh = mesh;
+    this._mesh.Game3Model = this;
   },
 
 
   /**
-   * Public interface for getting the mesh for this model.
-   * TODO: This might change to return a THREE.Object3D
-   * @return {THREE.Mesh} The mesh associated with this model.
+   * Protected interface for getting or setting the hitbox for this model.
+   * @param {THREE.Object3D?} mesh The hitbox for this model.
    */
-  getMesh: function() {
-    return this.mesh;
+  hitbox: function(hitbox) {
+    if (hitbox === undefined)
+      return this._hitbox;
+    // set the mesh
+    this._hitbox = hitbox;
+    this._hitbox.Game3Model = this;
   },
+
 
   /**
    * Render the object in the scence.
@@ -395,9 +404,9 @@ Game3.Model = Game3.Class.extend({
     this.interactive = interactive;
     // render in the scene
     if (interactive)
-      this.game.addDynamic(this.mesh);
+      this.game.addDynamic(this._mesh, this._hitbox);
     else
-      this.game.addStatic(this.mesh);
+      this.game.addStatic(this._mesh);
   },
 
 
@@ -472,16 +481,16 @@ Game3.Event = Game3.Class.extend({
 // Logic for sending messages to objects.
 
 // constants
-Game3.EVENTS_LEFT_CLICK = 'click';
-Game3.EVENTS_RIGHT_CLICK = 'rightclick';
-Game3.EVENTS_MOUSEMOVE = 'mousemove';
-Game3.EVENTS_MOUSEDOWN = 'mousedown';
-Game3.EVENTS_MOUSEUP = 'mouseup';
-Game3.EVENTS_MOUSEOVER = 'mouseover';
-Game3.EVENTS_MOUSEOUT = 'mouseout';
-Game3.EVENTS_MOUSEDRAG = 'mousedrag';
-Game3.EVENTS_MOUSEDROP = 'mousedrop';
-Game3.EVENTS_MOUSESCROLL = 'scroll';
+Game3.EVENTS_LEFT_CLICK    = 'click';
+Game3.EVENTS_RIGHT_CLICK   = 'rightclick';
+Game3.EVENTS_MOUSEMOVE     = 'mousemove';
+Game3.EVENTS_MOUSEDOWN     = 'mousedown';
+Game3.EVENTS_MOUSEUP       = 'mouseup';
+Game3.EVENTS_MOUSEOVER     = 'mouseover';
+Game3.EVENTS_MOUSEOUT      = 'mouseout';
+Game3.EVENTS_MOUSEDRAG     = 'mousedrag';
+Game3.EVENTS_MOUSEDROP     = 'mousedrop';
+Game3.EVENTS_MOUSESCROLL   = 'scroll';
 
 
 Game3.Events = Game3.Class.extend({
@@ -767,9 +776,12 @@ Game3.Game = Game3.Class.extend({
    * Interface for adding an interactive object to the scene. These objects
    * will be sent mouse events.
    * @param {THREE.Object} object The object to add to the scene.
+   * @param {THREE.Object} hitbox The hitbox to use for event handling.
    */
-  addDynamic: function(object) {
-    this.events.track(object);
+  addDynamic: function(object, hitbox) {
+    if (hitbox === undefined)
+      hitbox = object;
+    this.events.track(hitbox);
     this.scene.add(object);
   },
 
