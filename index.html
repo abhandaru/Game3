@@ -28,21 +28,20 @@ var Game = Game3.Game.extend({
 var Cube = Game3.Model.extend({
   init: function(game) {
     // set up geometry
-    var grey = new THREE.MeshLambertMaterial({color: 0xCCCCCC});
-    this.cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), grey);
+    this.pause = false;
+    this.cube = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(200, 1),
+        new THREE.MeshNormalMaterial());
     // set object
     this.mesh(this.cube);
   },
+  click: function() {
+    this.pause = !this.pause;
+  },
   timerfired: function() {
+    if (this.pause) return;
     this.cube.rotation.x += 0.01;
     this.cube.rotation.y += 0.02;
-  },
-  mouseover: function(event) {
-    var rand = Math.floor(Math.random() * 0xFFFFFF);
-    this.cube.material.color.setHex(rand);
-  },
-  mouseout: function(event) {
-    this.cube.material.color.setHex(0xCCCCCC);
   }
 });
   </script>
@@ -130,30 +129,27 @@ var Cube = Game3.Model.extend({
 <pre><code>var Cube = Game3.Model.extend({
   init: function(game) {
     // set up geometry
-    var grey = new THREE.MeshLambertMaterial({color: 0xCCCCCC});
-    this.cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), grey);
-
+    this.pause = false;
+    this.cube = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(200, 1),
+        new THREE.MeshNormalMaterial());
     // set object
     this.mesh(this.cube);
   },
 
+  click: function() {
+    this.pause = !this.pause;
+  },
+
   timerfired: function() {
+    if (this.pause) return;
     this.cube.rotation.x += 0.01;
     this.cube.rotation.y += 0.02;
-  },
-
-  mouseover: function(event) {
-    var rand = Math.floor(Math.random() * 0xFFFFFF);
-    this.cube.material.color.setHex(rand);
-  },
-
-  mouseout: function(event) {
-    this.cube.material.color.setHex(0xCCCCCC);
   }
 });
 </code></pre>
 
-<p>All that's left is to create an instance of the <tt>App</tt>, and provide it a container to live in. The whole thing clocks in at about <b>50 lines</b> (including whitespace and comments)!</p>
+<p>All that's left is to create an instance of the <tt>Game</tt>, and provide it a container to live in. The whole thing clocks in at about <b>40 lines</b> (including whitespace and comments)!</p>
 
 <pre><code>// You will want to run these in a DOMReady handler.
 var el = document.getElementById('game');
