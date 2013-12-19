@@ -2,6 +2,8 @@
  * Simple JavaScript Inheritance
  * @author John Resig (http://ejohn.org/)
  * MIT Licensed.
+ *
+ * Modified by Adu Bhandaru: Now support pre-post constructor handles.
  */
 
 // Inspired by base2 and Prototype

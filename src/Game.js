@@ -65,34 +65,52 @@ Game3.Game = Game3.Class.extend({
    * will not be sent mouse events, and will not affect line-of-sight events.
    * @param {THREE.Object} object The object to add to the scene.
    */
-  addStatic: function(object) {
-    this.scene.add(object);
+  add: function(object) {
+    // robustness
+    if (!object) return false;
+
+    // adding a light to the scene
+    if (object instanceof Game3.Light || object instanceof THREE.Light) {
+      this.scene.add(object);
+      return true;
+    }
+
+    // adding a model to the scene
+    else if (object instanceof Game3.Model) {
+      var model = object;
+      var mesh = model.mesh();
+      var hitbox = model.hitbox();
+      var interactive = model.interactive;
+      hitbox = hitbox || mesh;
+      if (mesh) this.scene.add(mesh);
+      if (hitbox && interactive) this.events.track(hitbox);
+      return !!(mesh || (hitbox && interactive));
+    }
+
+    // adding a raw THREE.js object
+    else if (object instanceof THREE.Object3D) {
+      this.scene.add(object);
+      return true;
+    }
+
+    // user tried to add something weird.
+    return false;
   },
 
 
   /**
-   * Interface for adding an interactive object to the scene. These objects
-   * will be sent mouse events.
-   * @param {THREE.Object} object The object to add to the scene.
-   * @param {THREE.Object} hitbox The hitbox to use for event handling.
+   * Meet the interface for receiving events.
+   * @return {Game.Class} The Game class has no parent, always returns null.
    */
-  addDynamic: function(object, hitbox) {
-    if (!hitbox)
-      hitbox = object;
-    this.events.track(hitbox);
-    this.scene.add(object);
+  parent: function() {
+    return null;
   },
 
 
   /**
-   * Interface for adding a light to the scene.
-   * @param {THREE.Light} light The light to add to the scene.
+   * Called when the window is resized to fit the bounds.
+   * TODO: Can we watch only for resize events to el (container Element)?
    */
-  addLight: function(light) {
-    this.scene.add(light);
-  },
-
-
   resize: function() {
     var width = this.width = this.el.offsetWidth;
     var height = this.height = this.el.offsetHeight;

@@ -10,10 +10,12 @@ Game3.Model = Game3.Class.extend({
    * @param {Game3.Game} game Reference to game class, for message passing.
    */
   before_init: function(game) {
-    this.game = game;
-    this.interactive = false;
+    this._game = game;
+    this._parent = null;
     this._mesh = null;
     this._hitbox = null;
+    // public member
+    this.interactive = false;
   },
 
 
@@ -22,6 +24,18 @@ Game3.Model = Game3.Class.extend({
    * @param {Game3.Game} game Reference to game class, for message passing.
    */
   init: function(game) { },
+
+
+  /**
+   * Add this model to the scene and game.
+   * @param {Object} object The child object.
+   */
+  add: function(object) {
+    // set up hierarchy only for Game3 Models.
+    if (object instanceof Game3.Model)
+      object.parent(this);
+    this._game.add(object);
+  },
 
 
   /**
@@ -51,27 +65,19 @@ Game3.Model = Game3.Class.extend({
 
 
   /**
-   * Render the object in the scence.
-   * You only need to run this once. However, if you want to change if
-   * something is interactive or not, you'll have to remove it, then show
-   * it again. Making lots of interactive objects is slow!
-   * @param {Boolean} interactive Whether or not to send events to this object.
+   * Protected interface for getting or setting the hitbox for this model.
+   * @param {Game3.Model?} The parent model for this instance, if any.
    */
-  show: function(interactive) {
-    if (interactive === undefined)
-      interactive = false;
-    this.interactive = interactive;
-    // render in the scene
-    if (interactive)
-      this.game.addDynamic(this._mesh, this._hitbox || this._mesh);
-    else
-      this.game.addStatic(this._mesh);
+  parent: function(parent) {
+    if (parent === undefined)
+      return this._parent;
+    this._parent = parent;
   },
 
 
   hide: function() {
     // remove object from scene
-    // unimplemented
+    console.error('Feature unimplemented.');
   }
 
 });

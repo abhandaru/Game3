@@ -198,9 +198,18 @@ Game3.Events = Game3.Class.extend({
   },
 
 
+  /**
+   * Try and send an event to a model. If the model handles it, return.
+   * Otherwise bubble the event to the parent models.
+   * @return {Boolean} the last handler return value.
+   */
   resolveEvent: function(model, handler, event) {
-    if (this.sendEvent(model, handler, event))
-      return true;
+    while (model) {
+      handled = this.sendEvent(model, handler, event);
+      if (handled)
+        return handled;
+      model = model.parent();
+    }
     // otherwise, send to game
     return this.sendEvent(this.game, handler, event);
   },
@@ -216,7 +225,7 @@ Game3.Events = Game3.Class.extend({
   sendEvent: function(model, handler, event) {
     var handlerFn = model[handler];
     if (model && handlerFn && typeof handlerFn == 'function') {
-      return handlerFn.apply(model, [event]) !== false;
+      return handlerFn.apply(model, [event, this.game]) !== false;
     }
     return false;
   }
