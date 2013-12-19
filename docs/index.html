@@ -257,7 +257,32 @@ The width of the canvas.
 
 ### Instance Methods
 
-### `.timerfired()`
+### `.add(object) {boolean}`
+__`object {Object}`:__ The object to add to your app.
+
+__`@return {boolean}`:__ Whether or not the object was added to the scene.
+
+    init: function(el) {
+      // make a cube and a light
+      this.light = new Game3.Light(0xFFFFFF);
+      this.cube = new Cube(this);
+
+      // show objects
+      this.add(this.cube);
+      this.add(this.light);
+    }
+
+To mimic polymorphism, `.add()` does the correct thing based on what you give it. Below is a brief description of the behavior based on the input.
+
+- `Game3.Light`: Adds a light to the scene.
+- `Game3.Model`: Adds the `.mesh()` to your scene and the `.hitbox()` to the events tracker, if your model is interactive.
+- `THREE.Light`: Adds a light to the scene.
+- `THREE.Object3D`: Adds a generic object to the scene. It receives no events.
+
+
+### `.timerfired(dt)`
+__`dt {number}`:__ The time in milliseconds since the last `.timerfired()` was called. Use this delta for more robust animations and counters.
+
 Call any logic that would change your game state every timestep. For example, animations may require you to update an object's position. This function is called _roughly_ 60 times a second (to achieve 60 FPS). However, if you are doing heavy computation in each timestep, this rate can drop.
 
 __Note:__ Later on we may decided to pass `timerfired()` the time difference `dt` since the last time it was called. This will be a demand driven feature.
@@ -333,9 +358,6 @@ The following event handlers are currently supported:
 - `scroll`
 
 
-### `.hide()`
-Unimplemented. Coming soon.
-
 ### `.hitbox(hitbox)`
 __`hitbox {THREE.Mesh?}`__: This argument is optional. If `hitbox` is provided, the hitbox for this model will be replaced. Otherwise, the `.hitbox()` returns the current hitbox.
 
@@ -345,11 +367,6 @@ Many times the visible geometry (rendered in the scene) is not the _interactive_
 __`mesh {THREE.Mesh?}`__: This argument is optional. If `mesh` is provided, the mesh for this model will be replaced. Otherwise, the `.mesh()` returns the current mesh.
 
 __Note:__ By convention, you would call `mesh()` at the end of your `init()` method.
-
-### `.show([interactive])`
-__`interactive {Boolean}`__: A flag that determines whether or not to send your model events.
-
-This method adds your model to the scene. If you do not call `show()` after you instantiate the model, nothing will be drawn on the canvas. We do not call `show()` by default because many times you will not want to draw every model you have set up in the `Game3.Game` constructor.
 
     </article>
     <script type="text/javascript">
