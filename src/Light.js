@@ -4,8 +4,7 @@
 
 Game3.Light = Game3.Class.extend({
 
-  init: function(game, color, position) {
-    this.game = game;
+ init: function(color, position) {
     // optional arguments
     if (color === undefined)
       color = 0xFFFFFF;
@@ -14,17 +13,14 @@ Game3.Light = Game3.Class.extend({
     // create object
     var light = new THREE.PointLight(color);
     light.position = position;
-    this.setLight(light);
+    // set the light
+    this.light(light);
   },
 
-  setLight: function(light) {
+  light: function(light) {
     if (light === undefined)
-      return light;
-    this.light = light;
-  },
-
-  show: function() {
-    this.game.addLight(this.light);
+      return this._light;
+    this._light = light;
   }
 
 });

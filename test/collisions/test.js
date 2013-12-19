@@ -1,7 +1,7 @@
 var Game = Game3.Game.extend({
   init: function(el) {
     // lights
-    this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(400, 300, -400));
+    this.light = new Game3.Light(0xFFFFFF, new THREE.Vector3(400, 300, -400));
 
     // set up spheres
     var smallPos = new THREE.Vector3(-100, 0, 0);
@@ -21,10 +21,10 @@ var Game = Game3.Game.extend({
         [this.small, this.med, this.big], Game3.COLLISIONS_SPHERES);
 
     // show objects
-    this.small.show();
-    this.med.show();
-    this.big.show();
-    this.light.show();
+    this.add(this.small);
+    this.add(this.med);
+    this.add(this.big);
+    this.add(this.light);
   },
 
   // gets called every timer fired

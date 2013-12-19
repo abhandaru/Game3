@@ -1,6 +1,6 @@
 var Game = Game3.Game.extend({
   init: function(el) {
-    this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(400, 300, -400));
+    this.light = new Game3.Light(0xFFFFFF, new THREE.Vector3(400, 300, -400));
     this.ball = new Ball(this);
 
     // set camera to the floor
@@ -8,8 +8,8 @@ var Game = Game3.Game.extend({
     this.camera.lookAt(this.ball.mesh().position);
 
     // show objects
-    this.light.show();
-    this.ball.show(true);
+    this.add(this.light);
+    this.add(this.ball);
   },
 
   mousedrag: function(event) {

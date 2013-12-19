@@ -182,6 +182,7 @@ Game3.Events = Game3.Class.extend({
     return intersects;
   },
 
+
   checkFocus: function(current, coords) {
     var focus = this.lastOver;
     var ret = false;
@@ -225,7 +226,7 @@ Game3.Events = Game3.Class.extend({
   sendEvent: function(model, handler, event) {
     var handlerFn = model[handler];
     if (model && handlerFn && typeof handlerFn == 'function') {
-      return handlerFn.apply(model, [event, this.game]) !== false;
+      return handlerFn.apply(model, [event]) !== false;
     }
     return false;
   }

@@ -10,11 +10,11 @@ Game3.Model = Game3.Class.extend({
    * @param {Game3.Game} game Reference to game class, for message passing.
    */
   before_init: function(game) {
-    this._game = game;
     this._parent = null;
     this._mesh = null;
     this._hitbox = null;
-    // public member
+    // public members
+    this.game = game;
     this.interactive = false;
   },
 
@@ -34,7 +34,7 @@ Game3.Model = Game3.Class.extend({
     // set up hierarchy only for Game3 Models.
     if (object instanceof Game3.Model)
       object.parent(this);
-    this._game.add(object);
+    return this.game.add(object);
   },
 
 

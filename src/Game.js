@@ -70,8 +70,9 @@ Game3.Game = Game3.Class.extend({
     if (!object) return false;
 
     // adding a light to the scene
-    if (object instanceof Game3.Light || object instanceof THREE.Light) {
-      this.scene.add(object);
+    if (object instanceof Game3.Light) {
+      var light = object;
+      this.scene.add(light.light());
       return true;
     }
 
@@ -84,11 +85,14 @@ Game3.Game = Game3.Class.extend({
       hitbox = hitbox || mesh;
       if (mesh) this.scene.add(mesh);
       if (hitbox && interactive) this.events.track(hitbox);
-      return !!(mesh || (hitbox && interactive));
+      if (mesh || (hitbox && interactive)) {
+        model.parent(this);
+        return true;
+      } else return false;
     }
 
     // adding a raw THREE.js object
-    else if (object instanceof THREE.Object3D) {
+    else if (object instanceof THREE.Light || object instanceof THREE.Object3D) {
       this.scene.add(object);
       return true;
     }

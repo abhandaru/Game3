@@ -2,11 +2,11 @@ var Game = Game3.Game.extend({
   init: function(el) {
     // make a cube and a light
     this.cube = new Cube(this);
-    this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(400, 300, -400));
+    this.light = new Game3.Light(0xFFFFFF, new THREE.Vector3(400, 300, -400));
 
     // show objects
-    this.cube.show(true);
-    this.light.show();
+    this.add(this.cube);
+    this.add(this.light);
   },
 
   click: function(event) {
@@ -26,6 +26,7 @@ var Cube = Game3.Model.extend({
     this.cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), grey);
 
     // set object
+    this.interactive = true;
     this.mesh(this.cube);
   },
 
