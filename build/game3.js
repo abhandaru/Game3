@@ -87,6 +87,8 @@ Game3.renderLoop = function(caller, renderFn) {
  * Simple JavaScript Inheritance
  * @author John Resig (http://ejohn.org/)
  * MIT Licensed.
+ *
+ * Modified by Adu Bhandaru: Now support pre-post constructor handles.
  */
 
 // Inspired by base2 and Prototype
@@ -351,10 +353,12 @@ Game3.Model = Game3.Class.extend({
    * @param {Game3.Game} game Reference to game class, for message passing.
    */
   before_init: function(game) {
-    this.game = game;
-    this.interactive = false;
+    this._parent = null;
     this._mesh = null;
     this._hitbox = null;
+    // public members
+    this.game = game;
+    this.interactive = false;
   },
 
 
@@ -363,6 +367,18 @@ Game3.Model = Game3.Class.extend({
    * @param {Game3.Game} game Reference to game class, for message passing.
    */
   init: function(game) { },
+
+
+  /**
+   * Add this model to the scene and game.
+   * @param {Object} object The child object.
+   */
+  add: function(object) {
+    // set up hierarchy only for Game3 Models.
+    if (object instanceof Game3.Model)
+      object.parent(this);
+    return this.game.add(object);
+  },
 
 
   /**
@@ -392,27 +408,19 @@ Game3.Model = Game3.Class.extend({
 
 
   /**
-   * Render the object in the scence.
-   * You only need to run this once. However, if you want to change if
-   * something is interactive or not, you'll have to remove it, then show
-   * it again. Making lots of interactive objects is slow!
-   * @param {Boolean} interactive Whether or not to send events to this object.
+   * Protected interface for getting or setting the hitbox for this model.
+   * @param {Game3.Model?} The parent model for this instance, if any.
    */
-  show: function(interactive) {
-    if (interactive === undefined)
-      interactive = false;
-    this.interactive = interactive;
-    // render in the scene
-    if (interactive)
-      this.game.addDynamic(this._mesh, this._hitbox || this._mesh);
-    else
-      this.game.addStatic(this._mesh);
+  parent: function(parent) {
+    if (parent === undefined)
+      return this._parent;
+    this._parent = parent;
   },
 
 
   hide: function() {
     // remove object from scene
-    // unimplemented
+    console.error('Feature unimplemented.');
   }
 
 });
@@ -422,8 +430,7 @@ Game3.Model = Game3.Class.extend({
 
 Game3.Light = Game3.Class.extend({
 
-  init: function(game, color, position) {
-    this.game = game;
+ init: function(color, position) {
     // optional arguments
     if (color === undefined)
       color = 0xFFFFFF;
@@ -432,17 +439,14 @@ Game3.Light = Game3.Class.extend({
     // create object
     var light = new THREE.PointLight(color);
     light.position = position;
-    this.setLight(light);
+    // set the light
+    this.light(light);
   },
 
-  setLight: function(light) {
+  light: function(light) {
     if (light === undefined)
-      return light;
-    this.light = light;
-  },
-
-  show: function() {
-    this.game.addLight(this.light);
+      return this._light;
+    this._light = light;
   }
 
 });
@@ -660,6 +664,7 @@ Game3.Events = Game3.Class.extend({
     return intersects;
   },
 
+
   checkFocus: function(current, coords) {
     var focus = this.lastOver;
     var ret = false;
@@ -676,9 +681,18 @@ Game3.Events = Game3.Class.extend({
   },
 
 
+  /**
+   * Try and send an event to a model. If the model handles it, return.
+   * Otherwise bubble the event to the parent models.
+   * @return {Boolean} the last handler return value.
+   */
   resolveEvent: function(model, handler, event) {
-    if (this.sendEvent(model, handler, event))
-      return true;
+    while (model) {
+      handled = this.sendEvent(model, handler, event);
+      if (handled)
+        return handled;
+      model = model.parent();
+    }
     // otherwise, send to game
     return this.sendEvent(this.game, handler, event);
   },
@@ -767,34 +781,56 @@ Game3.Game = Game3.Class.extend({
    * will not be sent mouse events, and will not affect line-of-sight events.
    * @param {THREE.Object} object The object to add to the scene.
    */
-  addStatic: function(object) {
-    this.scene.add(object);
+  add: function(object) {
+    // robustness
+    if (!object) return false;
+
+    // adding a light to the scene
+    if (object instanceof Game3.Light) {
+      var light = object;
+      this.scene.add(light.light());
+      return true;
+    }
+
+    // adding a model to the scene
+    else if (object instanceof Game3.Model) {
+      var model = object;
+      var mesh = model.mesh();
+      var hitbox = model.hitbox();
+      var interactive = model.interactive;
+      hitbox = hitbox || mesh;
+      if (mesh) this.scene.add(mesh);
+      if (hitbox && interactive) this.events.track(hitbox);
+      if (mesh || (hitbox && interactive)) {
+        model.parent(this);
+        return true;
+      } else return false;
+    }
+
+    // adding a raw THREE.js object
+    else if (object instanceof THREE.Light || object instanceof THREE.Object3D) {
+      this.scene.add(object);
+      return true;
+    }
+
+    // user tried to add something weird.
+    return false;
   },
 
 
   /**
-   * Interface for adding an interactive object to the scene. These objects
-   * will be sent mouse events.
-   * @param {THREE.Object} object The object to add to the scene.
-   * @param {THREE.Object} hitbox The hitbox to use for event handling.
+   * Meet the interface for receiving events.
+   * @return {Game.Class} The Game class has no parent, always returns null.
    */
-  addDynamic: function(object, hitbox) {
-    if (!hitbox)
-      hitbox = object;
-    this.events.track(hitbox);
-    this.scene.add(object);
+  parent: function() {
+    return null;
   },
 
 
   /**
-   * Interface for adding a light to the scene.
-   * @param {THREE.Light} light The light to add to the scene.
+   * Called when the window is resized to fit the bounds.
+   * TODO: Can we watch only for resize events to el (container Element)?
    */
-  addLight: function(light) {
-    this.scene.add(light);
-  },
-
-
   resize: function() {
     var width = this.width = this.el.offsetWidth;
     var height = this.height = this.el.offsetHeight;
