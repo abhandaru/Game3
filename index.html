@@ -134,6 +134,7 @@ var Model = Game3.Model.extend({
         new THREE.IcosahedronGeometry(200, 1),
         new THREE.MeshNormalMaterial());
     // set object
+    this.interactive = true;
     this.mesh(this.geo);
   },
 
