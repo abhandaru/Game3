@@ -87,6 +87,7 @@ Game3.Game = Game3.Class.extend({
       if (hitbox && interactive) this.events.track(hitbox);
       if (mesh || (hitbox && interactive)) {
         model.parent(this);
+        model.__show();
         return true;
       } else return false;
     }

@@ -10,9 +10,10 @@ Game3.Model = Game3.Class.extend({
    * @param {Game3.Game} game Reference to game class, for message passing.
    */
   before_init: function(game) {
-    this._parent = null;
-    this._mesh = null;
-    this._hitbox = null;
+    this.__parent = null;
+    this.__children = [ ];
+    this.__mesh = null;
+    this.__hitbox = null;
     // public members
     this.game = game;
     this.interactive = false;
@@ -32,9 +33,11 @@ Game3.Model = Game3.Class.extend({
    */
   add: function(object) {
     // set up hierarchy only for Game3 Models.
-    if (object instanceof Game3.Model)
+    if (object instanceof Game3.Model) {
       object.parent(this);
-    return this.game.add(object);
+    }
+    this.__children.push(object);
+    return true;
   },
 
 
@@ -44,10 +47,10 @@ Game3.Model = Game3.Class.extend({
    */
   mesh: function(mesh) {
     if (mesh === undefined)
-      return this._mesh;
+      return this.__mesh;
     // set the mesh
-    this._mesh = mesh;
-    this._mesh.Game3Model = this;
+    this.__mesh = mesh;
+    this.__mesh.Game3Model = this;
   },
 
 
@@ -57,21 +60,33 @@ Game3.Model = Game3.Class.extend({
    */
   hitbox: function(hitbox) {
     if (hitbox === undefined)
-      return this._hitbox;
+      return this.__hitbox;
     // set the mesh
-    this._hitbox = hitbox;
-    this._hitbox.Game3Model = this;
+    this.__hitbox = hitbox;
+    this.__hitbox.Game3Model = this;
   },
 
 
   /**
    * Protected interface for getting or setting the hitbox for this model.
    * @param {Game3.Model?} The parent model for this instance, if any.
+   * TODO: Update the children fields of the old parent and new parent too.
    */
   parent: function(parent) {
     if (parent === undefined)
-      return this._parent;
-    this._parent = parent;
+      return this.__parent;
+    this.__parent = parent;
+  },
+
+
+  /**
+   * Internal Game3 use only.
+   */
+  __show: function() {
+    for (var i = 0; i < this.__children.length; i++) {
+      var child = this.__children[i];
+      this.game.add(child);
+    }
   }
 
 });
