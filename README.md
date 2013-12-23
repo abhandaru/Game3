@@ -19,6 +19,7 @@ The project is young! We are a little feature light, but worth using and always 
 - <tt>Game3.Game</tt> - Camera, renderer, and animation are all set up for you.
 - <tt>Game3.Model</tt> - Bind handlers easily, add state to your scene objects.
 - <tt>Game3.Event</tt> - Directly sent to your model/view, with rich metadata.
+- <tt>Game3.Collision</tt> - A collision event with rich metadata.
 - <tt>Game3.Collisions</tt> - Send your model/view collision events.
 - <tt>this._super</tt> - Easy override and extension.
 - Growing fast.
@@ -36,44 +37,42 @@ By extending the provided base classes, it is easy to customize and override wit
     var Game = Game3.Game.extend({
       init: function(el) {
         // make a cube and a light
-        this.cube = new Cube(this);
-        this.light = new Game3.Light(this, 0xFFFFFF, new THREE.Vector3(400, 300, -400));
+        this.light = new Game3.Light(0xFFFFFF, new THREE.Vector3(400, 300, -400));
+        this.geo = new Model(this);
 
         // show objects
-        this.cube.show(true); // true -> interactive
-        this.light.show();
+        this.add(this.geo);
+        this.add(this.light);
       },
 
       // gets called every timer fired
-      timerfired: function() {
-        this.cube.timerfired();
+      update: function(dt) {
+        this.geo.update();
       }
     });
 
 Declaring models and specifying how they'll be rendered is easy. Just extend the base <tt>Model</tt> class, and only override or supply methods you need. Additionally, binding event handlers is simple. If you have provided a handler, it will be called transparently. All the projection math is done for you. In an MVC-like pattern, you can operate on the highest level app class from here.
 
-    var Cube = Game3.Model.extend({
+    var Model = Game3.Model.extend({
       init: function(game) {
         // set up geometry
-        var grey = new THREE.MeshLambertMaterial({color: 0xCCCCCC});
-        this.cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), grey);
-
+        this.pause = false;
+        this.geo = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(200, 1),
+            new THREE.MeshNormalMaterial());
         // set object
-        this.setMesh(this.cube);
+        this.interactive = true;
+        this.mesh(this.geo);
       },
 
-      timerfired: function() {
-        this.cube.rotation.x += 0.01;
-        this.cube.rotation.y += 0.02;
+      click: function(event) {
+        this.pause = !this.pause;
       },
 
-      mouseover: function(event) {
-        var rand = Math.floor(Math.random() * 0xFFFFFF);
-        this.cube.material.color.setHex(rand);
-      },
-
-      mouseout: function(event) {
-        this.cube.material.color.setHex(0xCCCCCC);
+      update: function(dt) {
+        if (this.pause) return;
+        this.geo.rotation.x += 0.01;
+        this.geo.rotation.y += 0.02;
       }
     });
 

@@ -75,8 +75,9 @@ Game3.renderLoop = function(caller, renderFn) {
   var render = function() {
     window.requestAnimationFrame(render);
     // call the passed trigger
-    var dt = Date.now() - lastUpdate;
-    lastUpdate = Date.now();
+    var now = Date.now();
+    var dt =  now - lastUpdate;
+    lastUpdate = now;
     renderFn.apply(caller, [dt]);
   };
   render();
@@ -838,7 +839,7 @@ Game3.Game = Game3.Class.extend({
    * For example, animations may require you to update an object's position.
    * @return {void}
    */
-  timerfired: function(dt) { },
+  update: function(dt) { },
 
 
   /**
@@ -846,7 +847,7 @@ Game3.Game = Game3.Class.extend({
    * @return {void}
    */
   render: function(dt) {
-    this.timerfired(dt);
+    this.update(dt);
     this.renderer.render(this.scene, this.camera);
   }
 

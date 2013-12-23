@@ -28,11 +28,11 @@ var Game = Game3.Game.extend({
   },
 
   // gets called every timer fired
-  timerfired: function() {
+  update: function() {
     this.collisions.check();
-    this.big.timerfired();
-    this.med.timerfired();
-    this.small.timerfired();
+    this.big.update();
+    this.med.update();
+    this.small.update();
   }
 });
 
@@ -47,7 +47,7 @@ var Ball = Game3.Model.extend({
     this.mesh(this.ball);
   },
 
-  timerfired: function() {
+  update: function() {
     if (this.ball.position.length() > 300)
       this.velocity.reflect(this.ball.position).negate();
     this.ball.position.add(this.velocity);

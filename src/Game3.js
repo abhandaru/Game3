@@ -72,8 +72,9 @@ Game3.renderLoop = function(caller, renderFn) {
   var render = function() {
     window.requestAnimationFrame(render);
     // call the passed trigger
-    var dt = Date.now() - lastUpdate;
-    lastUpdate = Date.now();
+    var now = Date.now();
+    var dt =  now - lastUpdate;
+    lastUpdate = now;
     renderFn.apply(caller, [dt]);
   };
   render();
