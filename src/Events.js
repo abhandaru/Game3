@@ -211,8 +211,6 @@ Game3.Events = Game3.Class.extend({
         return handled;
       model = model.parent();
     }
-    // otherwise, send to game
-    return this.sendEvent(this.game, handler, event);
   },
 
 

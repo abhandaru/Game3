@@ -15,6 +15,7 @@ var Game = Game3.Game.extend({
 
   rightclick: function(event) {
     console.log('right');
+    return false;
   }
 
 });

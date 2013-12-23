@@ -72,12 +72,6 @@ Game3.Model = Game3.Class.extend({
     if (parent === undefined)
       return this._parent;
     this._parent = parent;
-  },
-
-
-  hide: function() {
-    // remove object from scene
-    console.error('Feature unimplemented.');
   }
 
 });
