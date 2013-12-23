@@ -280,7 +280,7 @@ To mimic polymorphism, `.add()` does the correct thing based on what you give it
 - `THREE.Object3D`: Adds a generic object to the scene. It receives no events.
 
 
-### `.timerfired(dt)`
+### `.update(dt)`
 __`dt {number}`:__ The time in milliseconds since the last `.timerfired()` was called. Use this delta for more robust animations and counters.
 
 Call any logic that would change your game state every timestep. For example, animations may require you to update an object's position. This function is called _roughly_ 60 times a second (to achieve 60 FPS). However, if you are doing heavy computation in each timestep, this rate can drop.
@@ -323,7 +323,7 @@ A reference to your app.
 ### `.interactive {Boolean}`
 Whether or not to send this model events. This is `false` by default. Making too many objects in the scene interactive can slow down your application.
 
-__Note:__ Do not modify this flag directly.
+__Note:__ You must set this flag before using `.add()` to register it in the system.
 
 
 ### Instance Methods
@@ -340,7 +340,7 @@ Using event handlers for a `Model` is simple. Just define a handler function wit
       console.log(event);
     }
 
-`Game3` will automatically call the handler when your model receives the event. Remeber, to recieve events, you must make your model `interactive`.
+`Game3` will automatically call the handler when your model receives the event. Remember, to recieve events, you must make your model `interactive`.
 
 __Event bubbling:__ If `(handler() === false)`, we say that this handler does not _handle_ the event. Therefore, the event should __bubble__ to the `Game` class. If no handler _handles_ the event, the default action will be taken. That is, the events framework will __not__ call `preventDefault()` on the native event.
 

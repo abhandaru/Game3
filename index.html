@@ -118,8 +118,8 @@ var Model = Game3.Model.extend({
   },
 
   // gets called every timer fired
-  timerfired: function(dt) {
-    this.geo.timerfired();
+  update: function(dt) {
+    this.geo.update(dt);
   }
 });
 </code></pre>
@@ -142,7 +142,7 @@ var Model = Game3.Model.extend({
     this.pause = !this.pause;
   },
 
-  timerfired: function() {
+  update: function(dt) {
     if (this.pause) return;
     this.geo.rotation.x += 0.01;
     this.geo.rotation.y += 0.02;
