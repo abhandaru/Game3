@@ -211,6 +211,7 @@ Game3.Events = Game3.Class.extend({
         return handled;
       model = model.parent();
     }
+    return false;
   },
 
 
