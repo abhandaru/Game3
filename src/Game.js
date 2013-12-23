@@ -56,7 +56,7 @@ Game3.Game = Game3.Class.extend({
     }
 
     // bind render loop to timer
-    Game3.renderLoop(this, this.render);
+    Game3.renderLoop(this, this.__render);
   },
 
 
@@ -85,11 +85,10 @@ Game3.Game = Game3.Class.extend({
       hitbox = hitbox || mesh;
       if (mesh) this.scene.add(mesh);
       if (hitbox && interactive) this.events.track(hitbox);
-      if (mesh || (hitbox && interactive)) {
-        model.parent(this);
-        model.__show();
-        return true;
-      } else return false;
+      // link and propogate actions
+      model.parent(this);
+      model.__show();
+      return true;
     }
 
     // adding a raw THREE.js object
@@ -133,11 +132,15 @@ Game3.Game = Game3.Class.extend({
   update: function(dt) { },
 
 
+  //
+  // Internal Game3 use only.
+  //
+
   /**
    * This gets called by the render loop.
    * @return {void}
    */
-  render: function(dt) {
+  __render: function(dt) {
     this.update(dt);
     this.renderer.render(this.scene, this.camera);
   }

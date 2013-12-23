@@ -12,6 +12,7 @@ Game3.Model = Game3.Class.extend({
   before_init: function(game) {
     this.__parent = null;
     this.__children = [ ];
+    this.__visible = false;
     this.__mesh = null;
     this.__hitbox = null;
     // public members
@@ -37,7 +38,7 @@ Game3.Model = Game3.Class.extend({
       object.parent(this);
     }
     this.__children.push(object);
-    return true;
+    return (this.__visible) ? this.game.add(object) : true;
   },
 
 
@@ -79,10 +80,12 @@ Game3.Model = Game3.Class.extend({
   },
 
 
-  /**
-   * Internal Game3 use only.
-   */
+  //
+  // Internal Game3 use only.
+  //
+
   __show: function() {
+    this.__visible = true;
     for (var i = 0; i < this.__children.length; i++) {
       var child = this.__children[i];
       this.game.add(child);
