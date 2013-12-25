@@ -37,6 +37,8 @@ Game3.Model = Game3.Class.extend({
     if (object instanceof Game3.Model) {
       object.parent(this);
     }
+
+    // update child-links and add if we are already visible.
     this.__children.push(object);
     return (this.__visible) ? this.game.add(object) : true;
   },
@@ -86,10 +88,9 @@ Game3.Model = Game3.Class.extend({
 
   __show: function() {
     this.__visible = true;
-    for (var i = 0; i < this.__children.length; i++) {
-      var child = this.__children[i];
+    this.__children.forEach(function(child) {
       this.game.add(child);
-    }
+    });
   }
 
 });
