@@ -90,7 +90,7 @@ Game3.Model = Game3.Class.extend({
     this.__visible = true;
     this.__children.forEach(function(child) {
       this.game.add(child);
-    });
+    }, this);
   }
 
 });
