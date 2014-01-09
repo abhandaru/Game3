@@ -519,6 +519,9 @@ Game3.Events = Game3.Class.extend({
     this.objects = [ ];
     this.projector = new THREE.Projector();
 
+    // modify container so it can recieve scroll events
+    this.game.el.style.overflow = 'auto';
+
     // some state to track events
     this.isMouseDown = false;
     this.lastMousePosition = new THREE.Vector2(0, 0);
@@ -551,7 +554,7 @@ Game3.Events = Game3.Class.extend({
         'mousedown',
         'mouseup',
         'mousemove',
-        'wheel',
+        'mousewheel',
         'contextmenu'];
     // bind for all these events
     types.forEach(function(type) {
@@ -648,7 +651,7 @@ Game3.Events = Game3.Class.extend({
   },
 
 
-  wheel: function(event) {
+  mousewheel: function(event) {
     var target = event.model;
     return this.resolveEvent(target, Game3.EVENTS_MOUSESCROLL, event);
   },

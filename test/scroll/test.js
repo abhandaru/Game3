@@ -1,15 +1,15 @@
 var Game = Game3.Game.extend({
   init: function(el) {
     this.light = new Game3.Light(0xFFFFFF, new THREE.Vector3(400, 300, -400));
-    this.ball = new Ball(this);
+    this.cube = new Cube(this);
 
     // set camera to the floor
     this.camera.position = new THREE.Vector3(0, 200, 0);
-    this.camera.lookAt(this.ball.mesh().position);
+    this.camera.lookAt(this.cube.mesh().position);
 
     // show objects
     this.add(this.light);
-    this.add(this.ball);
+    this.add(this.cube);
   },
 
   mousedrag: function(event) {
@@ -26,12 +26,12 @@ var Game = Game3.Game.extend({
   }
 });
 
-var Ball = Game3.Model.extend({
+var Cube = Game3.Model.extend({
   init: function(game) {
     // set up geometry
     var grey = new THREE.MeshLambertMaterial({color: 0xCCCCCC});
-    this.ball = new THREE.Mesh(new THREE.CubeGeometry(100, 100, 100), grey);
+    this.cube = new THREE.Mesh(new THREE.CubeGeometry(100, 100, 100), grey);
     // set object
-    this.mesh(this.ball);
+    this.mesh(this.cube);
   }
 });
