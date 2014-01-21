@@ -63,7 +63,7 @@ Game3.Events = Game3.Class.extend({
     // bind for all these events
     types.forEach(function(type) {
       var handler = _this.wrapper(_this[type]);
-      container.addEventListener(type, handler);
+      container.addEventListener(type, handler, false);
     });
   },
 

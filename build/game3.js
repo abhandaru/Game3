@@ -559,7 +559,7 @@ Game3.Events = Game3.Class.extend({
     // bind for all these events
     types.forEach(function(type) {
       var handler = _this.wrapper(_this[type]);
-      container.addEventListener(type, handler);
+      container.addEventListener(type, handler, false);
     });
   },
 
@@ -780,11 +780,9 @@ Game3.Game = Game3.Class.extend({
    * @param {HTMLElement} A container for your application.
    */
   after_init: function(el) {
-    var _this = this;
-
     // bind resize event
     if (this.bindResize) {
-      window.addEventListener('resize', function() { return _this.resize(); });
+      window.addEventListener('resize', this.resize.bind(this), false);
     }
 
     // bind render loop to timer
