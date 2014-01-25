@@ -77,11 +77,14 @@ Game3.Game = Game3.Class.extend({
     // adding a model to the scene
     else if (object instanceof Game3.Model) {
       var model = object;
-      var mesh = model.mesh();
-      var hitbox = model.hitbox() || mesh;
-      var interactive = model.interactive;
-      if (mesh) this.scene.add(mesh);
-      if (hitbox && interactive) this.events.track(hitbox);
+      if (model.ready()) {
+        var mesh = model.mesh();
+        var hitbox = model.hitbox() || mesh;
+        var interactive = model.interactive;
+        if (mesh) this.scene.add(mesh);
+        if (hitbox && interactive) this.events.track(hitbox);
+      }
+
       // link and propogate actions
       if (!model.parent()) model.parent(this);
       model.__show();

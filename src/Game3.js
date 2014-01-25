@@ -80,4 +80,18 @@ Game3.renderLoop = function(caller, renderFn) {
   render();
 };
 
+
+//
+// Useful functions
+//
+
+Game3.origin = function() {
+  return new THREE.Vector3(0, 0, 0);
+};
+
+Game3.isFunction = function(fn) {
+  return fn && typeof fn == 'function';
+};
+
+
 })(window);

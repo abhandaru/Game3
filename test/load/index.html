@@ -1,0 +1,29 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="test.css" />
+  <script type="text/javascript" src="../../lib/jquery.js"></script>
+  <script type="text/javascript" src="../../lib/three.js"></script>
+  <!-- manual framework import -->
+  <script type="text/javascript" src="../../src/Game3.js"></script>
+  <script type="text/javascript" src="../../src/Class.js"></script>
+  <script type="text/javascript" src="../../src/Model.js"></script>
+  <script type="text/javascript" src="../../src/Light.js"></script>
+  <script type="text/javascript" src="../../src/Event.js"></script>
+  <script type="text/javascript" src="../../src/Events.js"></script>
+  <script type="text/javascript" src="../../src/Game.js"></script>
+  <!-- client code -->
+  <script type="text/javascript" src="test.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var el = document.getElementById('game');
+      var game = new Game(el);
+
+      console.log(game);
+      window.game = game;
+    });
+  </script>
+</head>
+<body>
+  <div id="game"></div>
+</body>
+</html>

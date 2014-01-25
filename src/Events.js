@@ -227,7 +227,7 @@ Game3.Events = Game3.Class.extend({
    */
   sendEvent: function(model, handler, event) {
     var handlerFn = model[handler];
-    if (model && handlerFn && typeof handlerFn == 'function') {
+    if (model && Game3.isFunction(handlerFn)) {
       return handlerFn.apply(model, [event]) !== false;
     }
     return false;

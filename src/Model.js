@@ -15,6 +15,7 @@ Game3.Model = Game3.Class.extend({
     this.__visible = false;
     this.__mesh = null;
     this.__hitbox = null;
+    this.__waiting = 0;
     // public members
     this.game = game;
     this.interactive = false;
@@ -67,6 +68,41 @@ Game3.Model = Game3.Class.extend({
     // set the mesh
     this.__hitbox = hitbox;
     this.__hitbox.Game3Model = this;
+  },
+
+
+  /**
+   * Returns the model status.
+   * This is useful for checking if the geometry for this particular model
+   * has finished loading.
+   * @return {boolean} True if the model is ready.
+   */
+  ready: function() {
+    return this.__waiting == 0;
+  },
+
+
+  /**
+   * Load the geometry from the given path.
+   * @param {string} path The path to the objects JSON file.
+   * @param {function(mesh, geometry, materials)} callback The user's function
+   *     call after setting up the mesh.
+   */
+  load: function(path, callback) {
+    // record we are waiting for a resource to load.
+    this.__waiting++;
+
+    // use THREE.js loader and wrap the user's callback
+    var loader = new THREE.JSONLoader();
+    loader.load(path, function(geometry, materials) {
+      var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+      if (Game3.isFunction(callback))
+        callback.apply(this, [mesh, geometry, materials]);
+
+      // clean up
+      this.__waiting--;
+      this.game.add(this);
+    }.bind(this));
   },
 
 
