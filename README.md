@@ -1,5 +1,9 @@
 # Game3
 
+__Update__ – The [react-three-fiber](https://github.com/react-spring/react-three-fiber) project is amazing and should be preferred over this library. It has the same goals, much richer functionality, and a great community.
+
+---
+
 __Game3__ is a JavaScript framework to write 3D apps using <a href="http://threejs.org/">ThreeJS</a>.
 
 The project is currently in it's infancy. The main problem with most ThreeJS apps is that there is a lot of exposed boilerplate code, and no consistent way to handle events with objects in the scene. Track this project on Github: <a href="https://github.com/abhandaru/Game3">Game3</a>
